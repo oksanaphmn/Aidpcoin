@@ -1,9 +1,49 @@
-Build instructions for Ravencoin 
+Build instructions for Aidp 
 =================================
 
 This will install most of the dependencies from ubuntu.
 The only one we build, is Berkeley DB 4.8.
 
+Ubuntu 22.04 - Jammy Jellyfish - Install dependencies:
+---------------------------
+`$ sudo apt install 
+build-essential
+libssl-dev
+libboost-chrono-dev
+libboost-filesystem-dev
+libboost-program-options-dev
+libboost-system-dev
+libboost-thread-dev
+libboost-test-dev
+qtbase5-dev
+qttools5-dev
+bison
+libexpat1-dev
+libdbus-1-dev
+libfontconfig-dev
+libfreetype6-dev
+libice-dev
+libsm-dev
+libx11-dev
+libxau-dev
+libxext-dev
+libevent-dev
+libxcb1-dev
+libxkbcommon-dev
+libminiupnpc-dev
+libprotobuf-dev
+libqrencode-dev
+xcb-proto
+x11proto-xext-dev
+x11proto-dev
+xtrans-dev
+zlib1g-dev
+libczmq-dev
+autoconf
+automake
+libtool
+protobuf-compiler
+`
 
 Ubuntu 21.10 - Impish Indri - Install dependencies:
 ---------------------------
@@ -87,6 +127,47 @@ libtool
 protobuf-compiler
 `
 
+Ubuntu 20.04 - Focal Fossa - Install dependencies:
+---------------------------
+`$ sudo apt install 
+build-essential
+libssl-dev
+libboost-chrono-dev
+libboost-filesystem-dev
+libboost-program-options-dev
+libboost-system-dev
+libboost-thread-dev
+libboost-test-dev
+qtbase5-dev
+qttools5-dev
+bison
+libexpat1-dev
+libdbus-1-dev
+libfontconfig-dev
+libfreetype6-dev
+libice-dev
+libsm-dev
+libx11-dev
+libxau-dev
+libxext-dev
+libevent-dev
+libxcb1-dev
+libxkbcommon-dev
+libminiupnpc-dev
+libprotobuf-dev
+libqrencode-dev
+xcb-proto
+x11proto-xext-dev
+x11proto-dev
+xtrans-dev
+zlib1g-dev
+libczmq-dev
+autoconf
+automake
+libtool
+protobuf-compiler
+`
+
 Ubuntu 18.04 - Bionic Beaver - Install dependencies:
 ----------------------------
 `$ sudo apt install 
@@ -130,12 +211,12 @@ protobuf-compiler
 
 Directory structure
 ------------------
-Ravencoin sources in `$HOME/src`
+Aidpcoin sources in `$HOME/src`
 
 Berkeley DB will be installed to `$HOME/src/db4`
 
 
-Ravencoin
+Aidpcoin
 ------------------
 
 Start in $HOME
@@ -146,11 +227,11 @@ Make the directory for sources and go into it.
 
 `cd src`
 
-__Download Ravencoin source.__
+__Download Aidpcoin source.__
 
-`git clone https://github.com/RavenProject/Ravencoin`
+`git clone https://github.com/AidpProject/Aidpcoin`
 
-`cd Ravencoin`
+`cd Aidpcoin`
 
 `git checkout develop` # this checks out the develop branch.
 
@@ -171,11 +252,11 @@ _Adjust to own needs. This will install the binaries to `/usr/local/bin`_
 
 `make -j8`  # 8 for 8 build threads, adjust to fit your setup.
 
-You can now start raven-qt from the build directory.
+You can now start aidp-qt from the build directory.
 
-`src/qt/raven-qt`
+`src/qt/aidp-qt`
 
-ravend and raven-cli are in `src/`
+aidpd and aidp-cli are in `src/`
 
 
 __Optional:__

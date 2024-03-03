@@ -1,10 +1,11 @@
 // Copyright (c) 2017-2019 The Raven Core developers
+// Copyright (c) 2023-2024 The Aidp Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <assets/assets.h>
 
-#include <test/test_raven.h>
+#include <test/test_aidp.h>
 
 #include <boost/test/unit_test.hpp>
 #include "core_write.cpp"
@@ -47,20 +48,20 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
         BOOST_CHECK(!IsAssetNameValid("A._BC", type));
         BOOST_CHECK(!IsAssetNameValid("AB_.C", type));
 
-        //- Versions of RAVENCOIN NOT allowed
-        BOOST_CHECK(!IsAssetNameValid("RVN", type));
-        BOOST_CHECK(!IsAssetNameValid("RAVEN", type));
-        BOOST_CHECK(!IsAssetNameValid("RAVENCOIN", type));
+        //- Versions of AIDPCOIN NOT allowed
+        BOOST_CHECK(!IsAssetNameValid("AIDP", type));
+        BOOST_CHECK(!IsAssetNameValid("AIDP", type));
+        BOOST_CHECK(!IsAssetNameValid("AIDPCOIN", type));
 
-        //- Versions of RAVENCOIN ALLOWED
-        BOOST_CHECK(IsAssetNameValid("RAVEN.COIN", type));
-        BOOST_CHECK(IsAssetNameValid("RAVEN_COIN", type));
-        BOOST_CHECK(IsAssetNameValid("RVNSPYDER", type));
-        BOOST_CHECK(IsAssetNameValid("SPYDERRVN", type));
-        BOOST_CHECK(IsAssetNameValid("RAVENSPYDER", type));
-        BOOST_CHECK(IsAssetNameValid("SPYDERAVEN", type));
-        BOOST_CHECK(IsAssetNameValid("BLACK_RAVENS", type));
-        BOOST_CHECK(IsAssetNameValid("SERVNOT", type));
+        //- Versions of AIDPCOIN ALLOWED
+        BOOST_CHECK(IsAssetNameValid("AIDP.COIN", type));
+        BOOST_CHECK(IsAssetNameValid("AIDP_COIN", type));
+        BOOST_CHECK(IsAssetNameValid("AIDPSPYDER", type));
+        BOOST_CHECK(IsAssetNameValid("SPYDERAIDP", type));
+        BOOST_CHECK(IsAssetNameValid("AIDPSPYDER", type));
+        BOOST_CHECK(IsAssetNameValid("SPYDEAIDP", type));
+        BOOST_CHECK(IsAssetNameValid("BLACK_AIDPS", type));
+        BOOST_CHECK(IsAssetNameValid("SEAIDPOT", type));
 
         // subs
         BOOST_CHECK(IsAssetNameValid("ABC/A", type));
@@ -227,7 +228,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
         SelectParams(CBaseChainParams::MAIN);
 
         // Create the asset scriptPubKey
-        CAssetTransfer asset("RAVEN", 1000);
+        CAssetTransfer asset("AIDP", 1000);
         CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
         asset.ConstructTransaction(scriptPubKey);
 
@@ -248,7 +249,7 @@ BOOST_FIXTURE_TEST_SUITE(asset_tests, BasicTestingSetup)
         SelectParams(CBaseChainParams::MAIN);
 
         // Create the asset scriptPubKey
-        CNewAsset asset("RAVEN", 1000, 8, 1, 0, "");
+        CNewAsset asset("AIDP", 1000, 8, 1, 0, "");
         CScript scriptPubKey = GetScriptForDestination(DecodeDestination(GetParams().GlobalBurnAddress()));
         asset.ConstructTransaction(scriptPubKey);
 

@@ -1,10 +1,11 @@
 // Copyright (c) 2015-2016 The Bitcoin Core developers
 // Copyright (c) 2017-2019 The Raven Core developers
+// Copyright (c) 2023-2024 The Aidp Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVEN_REVERSELOCK_H
-#define RAVEN_REVERSELOCK_H
+#ifndef AIDP_REVERSELOCK_H
+#define AIDP_REVERSELOCK_H
 
 /**
  * An RAII-style reverse lock. Unlocks on construction and locks on destruction.
@@ -32,4 +33,4 @@ private:
     Lock templock;
 };
 
-#endif // RAVEN_REVERSELOCK_H
+#endif // AIDP_REVERSELOCK_H

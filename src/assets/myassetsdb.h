@@ -1,9 +1,10 @@
 // Copyright (c) 2019 The Raven Core developers
+// Copyright (c) 2023-2024 The Aidp Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVENCOIN_MYASSETSDB_H
-#define RAVENCOIN_MYASSETSDB_H
+#ifndef AIDPCOIN_MYASSETSDB_H
+#define AIDPCOIN_MYASSETSDB_H
 
 #include <dbwrapper.h>
 
@@ -79,4 +80,4 @@ public:
 };
 
 
-#endif //RAVENCOIN_MYASSETSDB_H
+#endif //AIDPCOIN_MYASSETSDB_H

@@ -1,15 +1,16 @@
 // Copyright (c) 2011-2016 The Bitcoin Core developers
 // Copyright (c) 2017-2021 The Raven Core developers
+// Copyright (c) 2023-2024 The Aidp Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVEN_QT_UTILITYDIALOG_H
-#define RAVEN_QT_UTILITYDIALOG_H
+#ifndef AIDP_QT_UTILITYDIALOG_H
+#define AIDP_QT_UTILITYDIALOG_H
 
 #include <QDialog>
 #include <QObject>
 
-class RavenGUI;
+class AidpGUI;
 
 namespace Ui {
     class HelpMessageDialog;
@@ -43,11 +44,11 @@ class ShutdownWindow : public QWidget
 
 public:
     explicit ShutdownWindow(QWidget *parent=nullptr, Qt::WindowFlags f=Qt::Widget);
-    static QWidget *showShutdownWindow(RavenGUI *window);
+    static QWidget *showShutdownWindow(AidpGUI *window);
 
 protected:
     void closeEvent(QCloseEvent *event);
 };
 
 
-#endif // RAVEN_QT_UTILITYDIALOG_H
+#endif // AIDP_QT_UTILITYDIALOG_H

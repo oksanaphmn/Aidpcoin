@@ -1,5 +1,6 @@
 # Copyright (c) 2013-2016 The Bitcoin Core developers
 # Copyright (c) 2017-2019 The Raven Core developers
+# Copyright (c) 2023-2024 The Aidp Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -19,28 +20,28 @@ else
 LIBUNIVALUE = $(UNIVALUE_LIBS)
 endif
 
-RAVEN_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
+AIDP_INCLUDES=-I$(builddir) -I$(builddir)/obj $(BDB_CPPFLAGS) $(BOOST_CPPFLAGS) $(LEVELDB_CPPFLAGS) $(CRYPTO_CFLAGS) $(SSL_CFLAGS)
 
-RAVEN_INCLUDES += -I$(srcdir)/secp256k1/include
-RAVEN_INCLUDES += $(UNIVALUE_CFLAGS)
+AIDP_INCLUDES += -I$(srcdir)/secp256k1/include
+AIDP_INCLUDES += $(UNIVALUE_CFLAGS)
 
-LIBRAVEN_SERVER=libraven_server.a
-LIBRAVEN_COMMON=libraven_common.a
-LIBRAVEN_CONSENSUS=libraven_consensus.a
-LIBRAVEN_CLI=libraven_cli.a
-LIBRAVEN_UTIL=libraven_util.a
-LIBRAVEN_CRYPTO=crypto/libraven_crypto.a
-LIBRAVENQT=qt/libravenqt.a
+LIBAIDP_SERVER=libaidp_server.a
+LIBAIDP_COMMON=libaidp_common.a
+LIBAIDP_CONSENSUS=libaidp_consensus.a
+LIBAIDP_CLI=libaidp_cli.a
+LIBAIDP_UTIL=libaidp_util.a
+LIBAIDP_CRYPTO=crypto/libaidp_crypto.a
+LIBAIDPQT=qt/libaidpqt.a
 LIBSECP256K1=secp256k1/libsecp256k1.la
 
 if ENABLE_ZMQ
-LIBRAVEN_ZMQ=libraven_zmq.a
+LIBAIDP_ZMQ=libaidp_zmq.a
 endif
-if BUILD_RAVEN_LIBS
-LIBRAVENCONSENSUS=libravenconsensus.la
+if BUILD_AIDP_LIBS
+LIBAIDPCONSENSUS=libaidpconsensus.la
 endif
 if ENABLE_WALLET
-LIBRAVEN_WALLET=libraven_wallet.a
+LIBAIDP_WALLET=libaidp_wallet.a
 endif
 
 $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
@@ -49,37 +50,37 @@ $(LIBSECP256K1): $(wildcard secp256k1/src/*) $(wildcard secp256k1/include/*)
 # Make is not made aware of per-object dependencies to avoid limiting building parallelization
 # But to build the less dependent modules first, we manually select their order here:
 EXTRA_LIBRARIES += \
-  $(LIBRAVEN_CRYPTO) \
-  $(LIBRAVEN_UTIL) \
-  $(LIBRAVEN_COMMON) \
-  $(LIBRAVEN_CONSENSUS) \
-  $(LIBRAVEN_SERVER) \
-  $(LIBRAVEN_CLI) \
-  $(LIBRAVEN_WALLET) \
-  $(LIBRAVEN_ZMQ)
+  $(LIBAIDP_CRYPTO) \
+  $(LIBAIDP_UTIL) \
+  $(LIBAIDP_COMMON) \
+  $(LIBAIDP_CONSENSUS) \
+  $(LIBAIDP_SERVER) \
+  $(LIBAIDP_CLI) \
+  $(LIBAIDP_WALLET) \
+  $(LIBAIDP_ZMQ)
 
-lib_LTLIBRARIES = $(LIBRAVENCONSENSUS)
+lib_LTLIBRARIES = $(LIBAIDPCONSENSUS)
 
 bin_PROGRAMS =
 noinst_PROGRAMS =
 TESTS =
 BENCHMARKS =
 
-if BUILD_RAVEND
-  bin_PROGRAMS += ravend
+if BUILD_AIDPD
+  bin_PROGRAMS += aidpd
 endif
 
-if BUILD_RAVEN_CLI
-  bin_PROGRAMS += raven-cli
+if BUILD_AIDP_CLI
+  bin_PROGRAMS += aidp-cli
 endif
 
-if BUILD_RAVEN_TX
-  bin_PROGRAMS += raven-tx
+if BUILD_AIDP_TX
+  bin_PROGRAMS += aidp-tx
 endif
 
 .PHONY: FORCE check-symbols check-security
-# raven core #
-RAVEN_CORE_H = \
+# aidp core #
+AIDP_CORE_H = \
   addrdb.h \
   addressindex.h \
   algo/sph_groestl.h \
@@ -240,12 +241,12 @@ obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
 	@$(top_srcdir)/share/genbuild.sh "$(abs_top_builddir)/src/obj/build.h" \
 	  "$(abs_top_srcdir)"
-libraven_util_a-clientversion.$(OBJEXT): obj/build.h
+libaidp_util_a-clientversion.$(OBJEXT): obj/build.h
 
-# server: shared between ravend and raven-qt
-libraven_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(RAVEN_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
-libraven_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libraven_server_a_SOURCES = \
+# server: shared between aidpd and aidp-qt
+libaidp_server_a_CPPFLAGS = $(AM_CPPFLAGS) $(AIDP_INCLUDES) $(MINIUPNPC_CPPFLAGS) $(EVENT_CFLAGS) $(EVENT_PTHREADS_CFLAGS)
+libaidp_server_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaidp_server_a_SOURCES = \
   addrdb.cpp \
   addrman.cpp \
   bloom.cpp \
@@ -297,23 +298,23 @@ libraven_server_a_SOURCES = \
   validation.cpp \
   validationinterface.cpp \
   versionbits.cpp \
-  $(RAVEN_CORE_H)
+  $(AIDP_CORE_H)
 
 if ENABLE_ZMQ
-libraven_zmq_a_CPPFLAGS = $(RAVEN_INCLUDES) $(ZMQ_CFLAGS)
-libraven_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libraven_zmq_a_SOURCES = \
+libaidp_zmq_a_CPPFLAGS = $(AIDP_INCLUDES) $(ZMQ_CFLAGS)
+libaidp_zmq_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaidp_zmq_a_SOURCES = \
   zmq/zmqabstractnotifier.cpp \
   zmq/zmqnotificationinterface.cpp \
   zmq/zmqpublishnotifier.cpp
 endif
 
 
-# wallet: shared between ravend and raven-qt, but only linked
+# wallet: shared between aidpd and aidp-qt, but only linked
 # when wallet enabled
-libraven_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(RAVEN_INCLUDES)
-libraven_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libraven_wallet_a_SOURCES = \
+libaidp_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(AIDP_INCLUDES)
+libaidp_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaidp_wallet_a_SOURCES = \
   wallet/crypter.cpp \
   wallet/db.cpp \
   wallet/feebumper.cpp \
@@ -324,12 +325,12 @@ libraven_wallet_a_SOURCES = \
   wallet/wallet.cpp \
   wallet/walletdb.cpp \
   wallet/bip39.cpp \
-  $(RAVEN_CORE_H)
+  $(AIDP_CORE_H)
 
 # crypto primitives library
-crypto_libraven_crypto_a_CPPFLAGS = $(AM_CPPFLAGS)
-crypto_libraven_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-crypto_libraven_crypto_a_SOURCES = \
+crypto_libaidp_crypto_a_CPPFLAGS = $(AM_CPPFLAGS)
+crypto_libaidp_crypto_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+crypto_libaidp_crypto_a_SOURCES = \
   crypto/aes.cpp \
   crypto/aes.h \
   crypto/chacha20.h \
@@ -372,13 +373,13 @@ crypto_libraven_crypto_a_SOURCES = \
   crypto/ethash/progpow_test_vectors.hpp
 
 if USE_ASM
-crypto_libraven_crypto_a_SOURCES += crypto/sha256_sse4.cpp
+crypto_libaidp_crypto_a_SOURCES += crypto/sha256_sse4.cpp
 endif
 
 # consensus: shared between all executables that validate any consensus rules.
-libraven_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(RAVEN_INCLUDES)
-libraven_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libraven_consensus_a_SOURCES = \
+libaidp_consensus_a_CPPFLAGS = $(AM_CPPFLAGS) $(AIDP_INCLUDES)
+libaidp_consensus_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaidp_consensus_a_SOURCES = \
   amount.h \
   arith_uint256.cpp \
   arith_uint256.h \
@@ -395,7 +396,7 @@ libraven_consensus_a_SOURCES = \
   primitives/transaction.h \
   pubkey.cpp \
   pubkey.h \
-  script/ravenconsensus.cpp \
+  script/aidpconsensus.cpp \
   script/interpreter.cpp \
   script/interpreter.h \
   script/script.cpp \
@@ -413,12 +414,12 @@ libraven_consensus_a_SOURCES = \
   version.h \
   LibBoolEE.cpp \
   LibBoolEE.h \
-  $(RAVEN_CORE_H)
+  $(AIDP_CORE_H)
 
-# common: shared between ravend, and raven-qt and non-server tools
-libraven_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(RAVEN_INCLUDES)
-libraven_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libraven_common_a_SOURCES = \
+# common: shared between aidpd, and aidp-qt and non-server tools
+libaidp_common_a_CPPFLAGS = $(AM_CPPFLAGS) $(AIDP_INCLUDES)
+libaidp_common_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaidp_common_a_SOURCES = \
   base58.cpp \
   chainparams.cpp \
   coins.cpp \
@@ -435,14 +436,14 @@ libraven_common_a_SOURCES = \
   script/sign.cpp \
   script/standard.cpp \
   warnings.cpp \
-  $(RAVEN_CORE_H)
+  $(AIDP_CORE_H)
 
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
 # backward-compatibility objects and their sanity checks are linked.
-libraven_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(RAVEN_INCLUDES)
-libraven_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libraven_util_a_SOURCES = \
+libaidp_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(AIDP_INCLUDES)
+libaidp_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaidp_util_a_SOURCES = \
   support/lockedpool.cpp \
   chainparamsbase.cpp \
   clientversion.cpp \
@@ -458,102 +459,102 @@ libraven_util_a_SOURCES = \
   utilmoneystr.cpp \
   utilstrencodings.cpp \
   utiltime.cpp \
-  $(RAVEN_CORE_H)
+  $(AIDP_CORE_H)
 
 if GLIBC_BACK_COMPAT
-libraven_util_a_SOURCES += compat/glibc_compat.cpp
+libaidp_util_a_SOURCES += compat/glibc_compat.cpp
 AM_LDFLAGS += $(COMPAT_LDFLAGS)
 endif
 
-# cli: shared between raven-cli and raven-qt
-libraven_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(RAVEN_INCLUDES)
-libraven_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-libraven_cli_a_SOURCES = \
+# cli: shared between aidp-cli and aidp-qt
+libaidp_cli_a_CPPFLAGS = $(AM_CPPFLAGS) $(AIDP_INCLUDES)
+libaidp_cli_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaidp_cli_a_SOURCES = \
   rpc/client.cpp \
-  $(RAVEN_CORE_H)
+  $(AIDP_CORE_H)
 
-nodist_libraven_util_a_SOURCES = $(srcdir)/obj/build.h
+nodist_libaidp_util_a_SOURCES = $(srcdir)/obj/build.h
 #
 
-# ravend binary #
-ravend_SOURCES = ravend.cpp
-ravend_CPPFLAGS = $(AM_CPPFLAGS) $(RAVEN_INCLUDES)
-ravend_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-ravend_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# aidpd binary #
+aidpd_SOURCES = aidpd.cpp
+aidpd_CPPFLAGS = $(AM_CPPFLAGS) $(AIDP_INCLUDES)
+aidpd_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+aidpd_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-ravend_SOURCES += ravend-res.rc
+aidpd_SOURCES += aidpd-res.rc
 endif
 
-ravend_LDADD = \
-  $(LIBRAVEN_SERVER) \
-  $(LIBRAVEN_COMMON) \
+aidpd_LDADD = \
+  $(LIBAIDP_SERVER) \
+  $(LIBAIDP_COMMON) \
   $(LIBUNIVALUE) \
-  $(LIBRAVEN_UTIL) \
-  $(LIBRAVEN_WALLET) \
-  $(LIBRAVEN_ZMQ) \
-  $(LIBRAVEN_CONSENSUS) \
-  $(LIBRAVEN_CRYPTO) \
+  $(LIBAIDP_UTIL) \
+  $(LIBAIDP_WALLET) \
+  $(LIBAIDP_ZMQ) \
+  $(LIBAIDP_CONSENSUS) \
+  $(LIBAIDP_CRYPTO) \
   $(LIBLEVELDB) \
   $(LIBLEVELDB_SSE42) \
   $(LIBMEMENV) \
   $(LIBSECP256K1)
 
-ravend_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
+aidpd_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(ZMQ_LIBS)
 
-# raven-cli binary #
-raven_cli_SOURCES = raven-cli.cpp
-raven_cli_CPPFLAGS = $(AM_CPPFLAGS) $(RAVEN_INCLUDES) $(EVENT_CFLAGS)
-raven_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-raven_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# aidp-cli binary #
+aidp_cli_SOURCES = aidp-cli.cpp
+aidp_cli_CPPFLAGS = $(AM_CPPFLAGS) $(AIDP_INCLUDES) $(EVENT_CFLAGS)
+aidp_cli_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+aidp_cli_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-raven_cli_SOURCES += raven-cli-res.rc
+aidp_cli_SOURCES += aidp-cli-res.rc
 endif
 
-raven_cli_LDADD = \
-  $(LIBRAVEN_CLI) \
+aidp_cli_LDADD = \
+  $(LIBAIDP_CLI) \
   $(LIBUNIVALUE) \
-  $(LIBRAVEN_UTIL) \
-  $(LIBRAVEN_CRYPTO)
+  $(LIBAIDP_UTIL) \
+  $(LIBAIDP_CRYPTO)
 
-raven_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
+aidp_cli_LDADD += $(BOOST_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(EVENT_LIBS)
 #
 
-# raven-tx binary #
-raven_tx_SOURCES = raven-tx.cpp
-raven_tx_CPPFLAGS = $(AM_CPPFLAGS) $(RAVEN_INCLUDES)
-raven_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
-raven_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
+# aidp-tx binary #
+aidp_tx_SOURCES = aidp-tx.cpp
+aidp_tx_CPPFLAGS = $(AM_CPPFLAGS) $(AIDP_INCLUDES)
+aidp_tx_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+aidp_tx_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 
 if TARGET_WINDOWS
-raven_tx_SOURCES += raven-tx-res.rc
+aidp_tx_SOURCES += aidp-tx-res.rc
 endif
 
-raven_tx_LDADD = \
+aidp_tx_LDADD = \
   $(LIBUNIVALUE) \
-  $(LIBRAVEN_COMMON) \
-  $(LIBRAVEN_UTIL) \
-  $(LIBRAVEN_CONSENSUS) \
-  $(LIBRAVEN_CRYPTO) \
+  $(LIBAIDP_COMMON) \
+  $(LIBAIDP_UTIL) \
+  $(LIBAIDP_CONSENSUS) \
+  $(LIBAIDP_CRYPTO) \
   $(LIBSECP256K1)
 
-raven_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
+aidp_tx_LDADD += $(BOOST_LIBS) $(CRYPTO_LIBS)
 #
 
-# ravenconsensus library #
-if BUILD_RAVEN_LIBS
-include_HEADERS = script/ravenconsensus.h
-libravenconsensus_la_SOURCES = $(crypto_libraven_crypto_a_SOURCES) $(libraven_consensus_a_SOURCES)
+# aidpconsensus library #
+if BUILD_AIDP_LIBS
+include_HEADERS = script/aidpconsensus.h
+libaidpconsensus_la_SOURCES = $(crypto_libaidp_crypto_a_SOURCES) $(libaidp_consensus_a_SOURCES)
 
 if GLIBC_BACK_COMPAT
-  libravenconsensus_la_SOURCES += compat/glibc_compat.cpp
+  libaidpconsensus_la_SOURCES += compat/glibc_compat.cpp
 endif
 
-libravenconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
-libravenconsensus_la_LIBADD = $(LIBSECP256K1) $(BOOST_LIBS)
-libravenconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_RAVEN_INTERNAL
-libravenconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libaidpconsensus_la_LDFLAGS = $(AM_LDFLAGS) -no-undefined $(RELDFLAGS)
+libaidpconsensus_la_LIBADD = $(LIBSECP256K1) $(BOOST_LIBS)
+libaidpconsensus_la_CPPFLAGS = $(AM_CPPFLAGS) -I$(builddir)/obj -I$(srcdir)/secp256k1/include -DBUILD_AIDP_INTERNAL
+libaidpconsensus_la_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 
 endif
 #
@@ -583,12 +584,12 @@ CLEANFILES += obj/build.h
 EXTRA_DIST = $(CTAES_DIST)
 
 
-config/raven-config.h: config/stamp-h1
+config/aidp-config.h: config/stamp-h1
 	@$(MAKE) -C $(top_builddir) $(subdir)/$(@)
-config/stamp-h1: $(top_srcdir)/$(subdir)/config/raven-config.h.in $(top_builddir)/config.status
+config/stamp-h1: $(top_srcdir)/$(subdir)/config/aidp-config.h.in $(top_builddir)/config.status
 	$(AM_V_at)$(MAKE) -C $(top_builddir) $(subdir)/$(@)
-$(top_srcdir)/$(subdir)/config/raven-config.h.in:  $(am__configure_deps)
-	$(AM_V_at)$(MAKE) -C $(top_srcdir) $(subdir)/config/raven-config.h.in
+$(top_srcdir)/$(subdir)/config/aidp-config.h.in:  $(am__configure_deps)
+	$(AM_V_at)$(MAKE) -C $(top_srcdir) $(subdir)/config/aidp-config.h.in
 
 clean-local:
 	-$(MAKE) -C secp256k1 clean

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Copyright (c) 2015-2016 The Bitcoin Core developers
 # Copyright (c) 2017-2020 The Raven Core developers
+# Copyright (c) 2023-2024 The Aidp Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -79,7 +80,7 @@ def create_coinbase(height, pubkey = None):
     coinbase.vin.append(CTxIn(COutPoint(0, 0xffffffff), 
                 ser_string(serialize_script_num(height)), 0xffffffff))
     coin_base_output = CTxOut()
-    coin_base_output.nValue = 5000 * COIN
+    coin_base_output.nValue = 600 * COIN
     halvings = int(height/150) # regtest
     coin_base_output.nValue >>= halvings
     if pubkey is not None:

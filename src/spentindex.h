@@ -1,10 +1,11 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2023-2024 The Aidp Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVEN_SPENTINDEX_H
-#define RAVEN_SPENTINDEX_H
+#ifndef AIDP_SPENTINDEX_H
+#define AIDP_SPENTINDEX_H
 
 #include "uint256.h"
 #include "amount.h"
@@ -95,4 +96,4 @@ struct CSpentIndexKeyCompare
     }
 };
 
-#endif // RAVEN_SPENTINDEX_H
+#endif // AIDP_SPENTINDEX_H

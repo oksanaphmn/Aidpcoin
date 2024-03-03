@@ -1,6 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
 // Copyright (c) 2017-2021 The Raven Core developers
+// Copyright (c) 2023-2024 The Aidp Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -65,7 +66,7 @@
 using namespace boost::placeholders;
 
 #if defined(NDEBUG)
-# error "Raven cannot be compiled without assertions."
+# error "Aidp cannot be compiled without assertions."
 #endif
 
 #define MICRO 0.000001
@@ -126,7 +127,7 @@ static void CheckBlockIndex(const Consensus::Params& consensusParams);
 /** Constant stuff for coinbase transactions we create: */
 CScript COINBASE_FLAGS;
 
-const std::string strMessageMagic = "Raven Signed Message:\n";
+const std::string strMessageMagic = "Aidp Signed Message:\n";
 
 // Internal stuff
 namespace {
@@ -521,7 +522,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
     const CTransaction& tx = *ptx;
     const uint256 hash = tx.GetHash();
 
-    /** RVN START */
+    /** AIDP START */
     std::vector<std::pair<std::string, uint256>> vReissueAssets;
     AssertLockHeld(cs_main);
     if (pfMissingInputs)
@@ -656,7 +657,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
             return error("%s: Consensus::CheckTxInputs: %s, %s", __func__, tx.GetHash().ToString(), FormatStateMessage(state));
         }
 
-        /** RVN START */
+        /** AIDP START */
         if (!AreAssetsDeployed()) {
             for (auto out : tx.vout) {
                 if (out.scriptPubKey.IsAssetScript())
@@ -669,7 +670,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
                 return error("%s: Consensus::CheckTxAssets: %s, %s", __func__, tx.GetHash().ToString(),
                              FormatStateMessage(state));
         }
-        /** RVN END */
+        /** AIDP END */
 
         // Check for non-standard pay-to-script-hash in inputs
         if (fRequireStandard && !AreInputsStandard(tx, view))
@@ -944,7 +945,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         // Remove conflicting transactions from the mempool
         for (const CTxMemPool::txiter it : allConflicting)
         {
-            LogPrint(BCLog::MEMPOOL, "replacing tx %s with %s for %s RVN additional fees, %d delta bytes\n",
+            LogPrint(BCLog::MEMPOOL, "replacing tx %s with %s for %s AIDP additional fees, %d delta bytes\n",
                     it->GetTx().GetHash().ToString(),
                     hash.ToString(),
                     FormatMoney(nModifiedFees - nConflictingFees),
@@ -1322,14 +1323,67 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
 CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
     int halvings = nHeight / consensusParams.nSubsidyHalvingInterval;
-    // Force block reward to zero when right shift is undefined.
-    if (halvings >= 64)
+
+    // Go zero after 107 micro-halvings (27 years) Mined 499 996 395 AIDP
+
+    if (halvings >= 107)
         return 0;
 
-    CAmount nSubsidy = 5000 * COIN;
-    // Subsidy is cut in half every 2,100,000 blocks which will occur approximately every 4 years.
-    nSubsidy >>= halvings;
-    return nSubsidy;
+    // Force block reward to 0.390625 after 96 halvings.
+    if (halvings >= 96)
+        return 0.390625 * COIN;       
+
+    // Force block reward to 0.78125 after 80 halvings.
+    if (halvings >= 80)
+        return 0.78125 * COIN;
+
+    // Force block reward to 1.5625 after 64 halvings.
+    if (halvings >= 64)
+        return 1.5625 * COIN;
+
+    // Force block reward to 3.125 after 48 halvings.
+    if (halvings >= 48)
+        return 3.125 * COIN;
+
+    // Force block reward to 6.25 after 32 halvings.
+    if (halvings >= 32)
+        return 6.25 * COIN;
+
+    // Force block reward to 12.5 after 24 halvings.
+    if (halvings >= 24)
+        return 12.5 * COIN;
+
+    // Force block reward to 25 after 16 halvings.
+    if (halvings >= 16)
+        return 25 * COIN;
+
+    // Force block reward to 50 after 12 halvings.
+    if (halvings >= 12)
+        return 50 * COIN;
+		
+    // Force block reward to 100 after 8 halvings.
+    if (halvings >= 8)
+        return 100 * COIN;
+
+    // Force block reward to 200 after 4 halvings.
+    if (halvings >= 4)
+        return 200 * COIN;
+		
+    // Force block reward to 367 after 3 halvings.
+    if (halvings >= 3)
+        return 367.2 * COIN;
+
+    // Force block reward to 459 after 2 halvings.
+    if (halvings >= 2)
+        return 459 * COIN;
+		
+    // Force block reward to 540 after 1 halving.
+    if (halvings >= 1)
+        return 540 * COIN;
+
+    // Force block reward to 600 for the first period.
+    if (halvings >= 0)
+        return 600 * COIN;
 }
 
 bool IsInitialBlockDownload()
@@ -1535,12 +1589,12 @@ void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, CTxUndo &txund
         txundo.vprevout.reserve(tx.vin.size());
         for (const CTxIn &txin : tx.vin) {
             txundo.vprevout.emplace_back();
-            bool is_spent = inputs.SpendCoin(txin.prevout, &txundo.vprevout.back(), assetCache); /** RVN START */ /* Pass assetCache into function */ /** RVN END */
+            bool is_spent = inputs.SpendCoin(txin.prevout, &txundo.vprevout.back(), assetCache); /** AIDP START */ /* Pass assetCache into function */ /** AIDP END */
             assert(is_spent);
         }
     }
     // add outputs
-    AddCoins(inputs, tx, nHeight, blockHash, false, assetCache, undoAssetData); /** RVN START */ /* Pass assetCache into function */ /** RVN END */
+    AddCoins(inputs, tx, nHeight, blockHash, false, assetCache, undoAssetData); /** AIDP START */ /* Pass assetCache into function */ /** AIDP END */
 }
 
 void UpdateCoins(const CTransaction& tx, CCoinsViewCache& inputs, int nHeight)
@@ -1767,7 +1821,7 @@ int ApplyTxInUndo(Coin&& undo, CCoinsViewCache& view, const COutPoint& out, CAss
 {
     bool fClean = true;
 
-    /** RVN START */
+    /** AIDP START */
     // This is needed because undo, is going to be cleared and moved when AddCoin is called. We need this for undo assets
     Coin tempCoin;
     bool fIsAsset = false;
@@ -1775,7 +1829,7 @@ int ApplyTxInUndo(Coin&& undo, CCoinsViewCache& view, const COutPoint& out, CAss
         fIsAsset = true;
         tempCoin = undo;
     }
-    /** RVN END */
+    /** AIDP END */
 
     if (view.HaveCoin(out)) fClean = false; // overwriting transaction output
 
@@ -1797,14 +1851,14 @@ int ApplyTxInUndo(Coin&& undo, CCoinsViewCache& view, const COutPoint& out, CAss
     // it is an overwrite.
     view.AddCoin(out, std::move(undo), !fClean);
 
-    /** RVN START */
+    /** AIDP START */
     if (AreAssetsDeployed()) {
         if (assetCache && fIsAsset) {
             if (!assetCache->UndoAssetCoin(tempCoin, out))
                 fClean = false;
         }
     }
-    /** RVN END */
+    /** AIDP END */
 
     return fClean ? DISCONNECT_OK : DISCONNECT_UNCLEAN;
 }
@@ -1877,7 +1931,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
                     addressIndex.push_back(std::make_pair(CAddressIndexKey(1, hashBytes, pindex->nHeight, i, hash, k, false), out.nValue));
                     addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(1, hashBytes, hash, k), CAddressUnspentValue()));
                 } else {
-                    /** RVN START */
+                    /** AIDP START */
                     if (AreAssetsDeployed()) {
                         std::string assetName;
                         CAmount assetAmount;
@@ -1900,7 +1954,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
                             continue;
                         }
                     }
-                    /** RVN END */
+                    /** AIDP END */
                 }
             }
         }
@@ -1912,19 +1966,19 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
             if (!tx.vout[o].scriptPubKey.IsUnspendable()) {
                 COutPoint out(hash, o);
                 Coin coin;
-                bool is_spent = view.SpendCoin(out, &coin, &tempCache); /** RVN START */ /* Pass assetsCache into the SpendCoin function */ /** RVN END */
+                bool is_spent = view.SpendCoin(out, &coin, &tempCache); /** AIDP START */ /* Pass assetsCache into the SpendCoin function */ /** AIDP END */
                 if (!is_spent || tx.vout[o] != coin.out || pindex->nHeight != coin.nHeight || is_coinbase != coin.fCoinBase) {
                     fClean = false; // transaction output mismatch
                 }
 
-                /** RVN START */
+                /** AIDP START */
                 if (AreAssetsDeployed()) {
                     if (assetsCache) {
                         if (IsScriptTransferAsset(tx.vout[o].scriptPubKey))
                             vAssetTxIndex.emplace_back(o);
                     }
                 }
-                /** RVN START */
+                /** AIDP START */
             } else {
                 if(AreRestrictedAssetsDeployed()) {
                     if (assetsCache) {
@@ -1940,7 +1994,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
             }
         }
 
-        /** RVN START */
+        /** AIDP START */
         if (AreAssetsDeployed()) {
             if (assetsCache) {
                 if (tx.IsNewAsset()) {
@@ -2157,7 +2211,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
                 }
             }
         }
-        /** RVN END */
+        /** AIDP END */
 
         // restore inputs
         if (i > 0) { // not coinbases
@@ -2169,7 +2223,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
             for (unsigned int j = tx.vin.size(); j-- > 0;) {
                 const COutPoint &out = tx.vin[j].prevout;
                 Coin &undo = txundo.vprevout[j];
-                int res = ApplyTxInUndo(std::move(undo), view, out, assetsCache); /** RVN START */ /* Pass assetsCache into ApplyTxInUndo function */ /** RVN END */
+                int res = ApplyTxInUndo(std::move(undo), view, out, assetsCache); /** AIDP START */ /* Pass assetsCache into ApplyTxInUndo function */ /** AIDP END */
                 if (res == DISCONNECT_FAILED) return DISCONNECT_FAILED;
                 fClean = fClean && res != DISCONNECT_UNCLEAN;
 
@@ -2206,7 +2260,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
                         addressIndex.push_back(std::make_pair(CAddressIndexKey(1, hashBytes, pindex->nHeight, i, hash, j, false), prevout.nValue));
                         addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(1, hashBytes, hash, j), CAddressUnspentValue()));
                     } else {
-                        /** RVN START */
+                        /** AIDP START */
                         if (AreAssetsDeployed()) {
                             std::string assetName;
                             CAmount assetAmount;
@@ -2230,7 +2284,7 @@ static DisconnectResult DisconnectBlock(const CBlock& block, const CBlockIndex* 
                                 continue;
                             }
                         }
-                        /** RVN END */
+                        /** AIDP END */
                     }
                 }
             }
@@ -2284,7 +2338,7 @@ static bool FindUndoPos(CValidationState &state, int nFile, CDiskBlockPos &pos, 
 static CCheckQueue<CScriptCheck> scriptcheckqueue(128);
 
 void ThreadScriptCheck() {
-    RenameThread("raven-scriptch");
+    RenameThread("aidp-scriptch");
     scriptcheckqueue.Thread();
 }
 
@@ -2534,7 +2588,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                                  REJECT_INVALID, "bad-txns-accumulated-fee-outofrange");
             }
 
-            /** RVN START */
+            /** AIDP START */
             if (!AreAssetsDeployed()) {
                 for (auto out : tx.vout)
                     if (out.scriptPubKey.IsAssetScript())
@@ -2552,7 +2606,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                 }
             }
 
-            /** RVN END */
+            /** AIDP END */
 
             // Check that transaction is BIP68 final
             // BIP68 lock checks (as opposed to nLockTime checks) must
@@ -2589,7 +2643,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                         hashBytes = Hash160(prevout.scriptPubKey.begin() + 1, prevout.scriptPubKey.end() - 1);
                         addressType = 1;
                     } else {
-                        /** RVN START */
+                        /** AIDP START */
                         if (AreAssetsDeployed()) {
                             hashBytes.SetNull();
                             addressType = 0;
@@ -2599,11 +2653,11 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                                 isAsset = true;
                             }
                         }
-                        /** RVN END */
+                        /** AIDP END */
                     }
 
                     if (fAddressIndex && addressType > 0) {
-                        /** RVN START */
+                        /** AIDP START */
                         if (isAsset) {
 //                            std::cout << "ConnectBlock(): pushing assets onto addressIndex: " << "1" << ", " << hashBytes.GetHex() << ", " << assetName << ", " << pindex->nHeight
 //                                      << ", " << i << ", " << txhash.GetHex() << ", " << j << ", " << "true" << ", " << assetAmount * -1 << std::endl;
@@ -2613,7 +2667,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
 
                             // remove address from unspent index
                             addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(addressType, hashBytes, assetName, input.prevout.hash, input.prevout.n), CAddressUnspentValue()));
-                        /** RVN END */
+                        /** AIDP END */
                         } else {
                             // record spending activity
                             addressIndex.push_back(std::make_pair(CAddressIndexKey(addressType, hashBytes, pindex->nHeight, i, txhash, j, true), prevout.nValue * -1));
@@ -2622,7 +2676,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                             addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(addressType, hashBytes, input.prevout.hash, input.prevout.n), CAddressUnspentValue()));
                         }
                     }
-                    /** RVN END */
+                    /** AIDP END */
 
                     if (fSpentIndex) {
                         // add the spent index to determine the txid and input that spent an output
@@ -2685,7 +2739,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                                                                  CAddressUnspentValue(out.nValue, out.scriptPubKey,
                                                                                       pindex->nHeight)));
                 } else {
-                    /** RVN START */
+                    /** AIDP START */
                     if (AreAssetsDeployed()) {
                         std::string assetName;
                         CAmount assetAmount;
@@ -2709,7 +2763,7 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
                     } else {
                         continue;
                     }
-                    /** RVN END */
+                    /** AIDP END */
                 }
             }
         }
@@ -2718,19 +2772,19 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
         if (i > 0) {
             blockundo.vtxundo.push_back(CTxUndo());
         }
-        /** RVN START */
+        /** AIDP START */
         // Create the basic empty string pair for the undoblock
         std::pair<std::string, CBlockAssetUndo> undoPair = std::make_pair("", CBlockAssetUndo());
         std::pair<std::string, CBlockAssetUndo>* undoAssetData = &undoPair;
-        /** RVN END */
+        /** AIDP END */
 
         UpdateCoins(tx, view, i == 0 ? undoDummy : blockundo.vtxundo.back(), pindex->nHeight, block.GetHash(), assetsCache, undoAssetData);
 
-        /** RVN START */
+        /** AIDP START */
         if (!undoAssetData->first.empty()) {
             vUndoAssetData.emplace_back(*undoAssetData);
         }
-        /** RVN END */
+        /** AIDP END */
 
         vPos.push_back(std::make_pair(tx.GetHash(), pos));
         pos.nTxOffset += ::GetSerializeSize(tx, SER_DISK, CLIENT_VERSION);
@@ -2741,10 +2795,44 @@ static bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockInd
     CAmount blockReward = nFees + GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus());
     if (block.vtx[0]->GetValueOut(AreEnforcedValuesDeployed()) > blockReward)
         return state.DoS(100,
-                         error("ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)",
-                               block.vtx[0]->GetValueOut(AreEnforcedValuesDeployed()), blockReward),
-                               REJECT_INVALID, "bad-cb-amount");
-
+                         error("ConnectBlock(): coinbase pays too much (actual=%d vs limit=%d)",block.vtx[0]->GetValueOut(AreEnforcedValuesDeployed()), blockReward),
+                         REJECT_INVALID, "bad-cb-amount");
+	
+    /** AIDP START */
+	//CommunityAutonomousAddress Assign 10%
+	std::string  GetCommunityAutonomousAddress 	= GetParams().CommunityAutonomousAddress();
+	CTxDestination destCommunityAutonomous 		= DecodeDestination(GetCommunityAutonomousAddress);
+    if (!IsValidDestination(destCommunityAutonomous)) {
+		LogPrintf("IsValidDestination: Invalid Aipg address %s \n", GetCommunityAutonomousAddress);
+    }
+	// Parse Aipg address
+    CScript scriptPubKeyCommunityAutonomous 	= GetScriptForDestination(destCommunityAutonomous);
+	
+	CAmount nCommunityAutonomousAmount 			= GetParams().CommunityAutonomousAmount();
+	CAmount nSubsidy 							= GetBlockSubsidy(pindex->nHeight, chainparams.GetConsensus());
+	CAmount nCommunityAutonomousAmountValue		= nSubsidy*nCommunityAutonomousAmount/100;
+	/* Remove Log to console
+	LogPrintf("==>block.vtx[0]->vout[1].nValue:    %ld \n", block.vtx[0]->vout[1].nValue);
+	LogPrintf("==>nCommunityAutonomousAmountValue: %ld \n", nCommunityAutonomousAmountValue);
+	LogPrintf("==>block.vtx[0]->vout[1].scriptPubKey: %s \n", block.vtx[0]->vout[1].scriptPubKey[3]);
+	LogPrintf("==>GetCommunityAutonomousAddress:   %s \n", GetCommunityAutonomousAddress);
+	LogPrintf("==>scriptPubKeyCommunityAutonomous    Actual: %s \n", HexStr(block.vtx[0]->vout[1].scriptPubKey));
+	LogPrintf("==>scriptPubKeyCommunityAutonomous Should Be: %s \n", HexStr(scriptPubKeyCommunityAutonomous));
+	*/
+	//Check 10% Amount
+	if(block.vtx[0]->vout[1].nValue != nCommunityAutonomousAmountValue )		{
+		return state.DoS(100,
+                         error("ConnectBlock(): coinbase Community Autonomous Amount Is Invalid. Actual: %ld Should be:%ld ",block.vtx[0]->vout[1].nValue, nCommunityAutonomousAmountValue),
+                         REJECT_INVALID, "bad-cb-community-autonomous-amount");
+	}
+	//Check 10% Address
+	if( HexStr(block.vtx[0]->vout[1].scriptPubKey) != HexStr(scriptPubKeyCommunityAutonomous) )		{
+		return state.DoS(100,
+                         error("ConnectBlock(): coinbase Community Autonomous Address Is Invalid. Actual: %s Should Be: %s \n",HexStr(block.vtx[0]->vout[1].scriptPubKey), HexStr(scriptPubKeyCommunityAutonomous)),
+                         REJECT_INVALID, "bad-cb-community-autonomous-address");
+	}
+	/** AIDP END */
+	
     if (!control.Wait())
         return state.DoS(100, error("%s: CheckQueue failed", __func__), REJECT_INVALID, "block-validation-failed");
     int64_t nTime4 = GetTimeMicros(); nTimeVerify += nTime4 - nTime2;
@@ -2988,14 +3076,14 @@ bool static FlushStateToDisk(const CChainParams& chainparams, CValidationState &
             // twice (once in the log, and once in the tables). This is already
             // an overestimation, as most will delete an existing entry or
             // overwrite one. Still, use a conservative safety factor of 2.
-            if (!CheckDiskSpace((48 * 2 * 2 * pcoinsTip->GetCacheSize()) + assetDirtyCacheSize * 2)) /** RVN START */ /** RVN END */
+            if (!CheckDiskSpace((48 * 2 * 2 * pcoinsTip->GetCacheSize()) + assetDirtyCacheSize * 2)) /** AIDP START */ /** AIDP END */
                 return state.Error("out of disk space");
 
             // Flush the chainstate (which may refer to block index entries).
             if (!pcoinsTip->Flush())
                 return AbortNode(state, "Failed to write to coin database");
 
-            /** RVN START */
+            /** AIDP START */
             // Flush the assetstate
             if (AreAssetsDeployed()) {
                 // Flush the assetstate
@@ -3023,7 +3111,7 @@ bool static FlushStateToDisk(const CChainParams& chainparams, CValidationState &
                         return AbortNode(state, "Failed to Flush the message channel database");
                 }
             }
-            /** RVN END */
+            /** AIDP END */
 
             nLastFlush = nNow;
         }
@@ -3279,20 +3367,20 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
     int64_t nTimeAssetsFlush;
     LogPrint(BCLog::BENCH, "  - Load block from disk: %.2fms [%.2fs]\n", (nTime2 - nTime1) * MILLI, nTimeReadFromDisk * MICRO);
 
-    /** RVN START */
+    /** AIDP START */
     // Initialize sets used from removing asset entries from the mempool
     ConnectedBlockAssetData assetDataFromBlock;
-    /** RVN END */
+    /** AIDP END */
 
     {
         CCoinsViewCache view(pcoinsTip);
-        /** RVN START */
+        /** AIDP START */
         // Create the empty asset cache, that will be sent into the connect block
         // All new data will be added to the cache, and will be flushed back into passets after a successful
         // Connect Block cycle
         CAssetsCache assetCache;
         std::vector<std::pair<std::string, CNullAssetTxData>> myNullAssetData;
-        /** RVN END */
+        /** AIDP END */
 
         int64_t nTimeConnectStart = GetTimeMicros();
 
@@ -3307,7 +3395,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         LogPrint(BCLog::BENCH, "  - Connect Block only time: %.2fms [%.2fs (%.2fms/blk)]\n", (nTimeConnectDone - nTimeConnectStart) * MILLI, nTimeConnectTotal * MICRO, nTimeConnectTotal * MILLI / nBlocksTotal);
 
         int64_t nTimeAssetsStart = GetTimeMicros();
-        /** RVN START */
+        /** AIDP START */
         // Get the newly created assets, from the connectblock assetCache so we can remove the correct assets from the mempool
         assetDataFromBlock = {assetCache.setNewAssetsToAdd, assetCache.setNewRestrictedVerifierToAdd, assetCache.setNewRestrictedAddressToAdd, assetCache.setNewRestrictedGlobalToAdd, assetCache.setNewQualifierAddressToAdd};
 
@@ -3322,22 +3410,22 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         }
         int64_t nTimeAssetsEnd = GetTimeMicros(); nTimeAssetTasks += nTimeAssetsEnd - nTimeAssetsStart;
         LogPrint(BCLog::BENCH, "  - Compute Asset Tasks total: %.2fms [%.2fs (%.2fms/blk)]\n", (nTimeAssetsEnd - nTimeAssetsStart) * MILLI, nTimeAssetsEnd * MICRO, nTimeAssetsEnd * MILLI / nBlocksTotal);
-        /** RVN END */
+        /** AIDP END */
 
         nTime3 = GetTimeMicros(); nTimeConnectTotal += nTime3 - nTime2;
         LogPrint(BCLog::BENCH, "  - Connect total: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime3 - nTime2) * MILLI, nTimeConnectTotal * MICRO, nTimeConnectTotal * MILLI / nBlocksTotal);
         bool flushed = view.Flush();
         assert(flushed);
         nTime4 = GetTimeMicros(); nTimeFlush += nTime4 - nTime3;
-        LogPrint(BCLog::BENCH, "  - Flush RVN: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime4 - nTime3) * MILLI, nTimeFlush * MICRO, nTimeFlush * MILLI / nBlocksTotal);
+        LogPrint(BCLog::BENCH, "  - Flush AIDP: %.2fms [%.2fs (%.2fms/blk)]\n", (nTime4 - nTime3) * MILLI, nTimeFlush * MICRO, nTimeFlush * MILLI / nBlocksTotal);
 
-        /** RVN START */
+        /** AIDP START */
         nTimeAssetsFlush = GetTimeMicros();
         bool assetFlushed = assetCache.Flush();
         assert(assetFlushed);
         int64_t nTimeAssetFlushFinished = GetTimeMicros(); nTimeAssetFlush += nTimeAssetFlushFinished - nTimeAssetsFlush;
         LogPrint(BCLog::BENCH, "  - Flush Assets: %.2fms [%.2fs (%.2fms/blk)]\n", (nTimeAssetFlushFinished - nTimeAssetsFlush) * MILLI, nTimeAssetFlush * MICRO, nTimeAssetFlush * MILLI / nBlocksTotal);
-        /** RVN END */
+        /** AIDP END */
     }
 
     // Write the chain state to disk, if necessary.
@@ -3357,7 +3445,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
 
     connectTrace.BlockConnected(pindexNew, std::move(pthisBlock));
 
-    /** RVN START */
+    /** AIDP START */
 
     //  Determine if the new block height has any pending snapshot requests,
     //      and if so, capture a snapshot of the relevant target assets.
@@ -3384,7 +3472,7 @@ bool static ConnectTip(CValidationState& state, const CChainParams& chainparams,
         CheckRewardDistributions(vpwallets[0]);
     }
 #endif
-    /** RVN END */
+    /** AIDP END */
 
     return true;
 }
@@ -4480,9 +4568,9 @@ bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams,
     indexDummy.pprev = pindexPrev;
     indexDummy.nHeight = pindexPrev->nHeight + 1;
 
-    /** RVN START */
+    /** AIDP START */
     CAssetsCache assetCache = *GetCurrentAssetCache();
-    /** RVN END */
+    /** AIDP END */
 
     // NOTE: CheckBlockHeader is called by CheckBlock
     if (!ContextualCheckBlockHeader(block, state, chainparams, pindexPrev, GetAdjustedTime()))
@@ -4491,7 +4579,7 @@ bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams,
         return error("%s: Consensus::CheckBlock: %s", __func__, FormatStateMessage(state));
     if (!ContextualCheckBlock(block, state, chainparams.GetConsensus(), pindexPrev, &assetCache))
         return error("%s: Consensus::ContextualCheckBlock: %s", __func__, FormatStateMessage(state));
-    if (!ConnectBlock(block, state, &indexDummy, viewNew, chainparams, &assetCache, true)) /** RVN START */ /*Add asset to function */ /** RVN END*/
+    if (!ConnectBlock(block, state, &indexDummy, viewNew, chainparams, &assetCache, true)) /** AIDP START */ /*Add asset to function */ /** AIDP END*/
         return error("%s: Consensus::ConnectBlock: %s", __func__, FormatStateMessage(state));
     assert(state.IsValid());
 
@@ -5741,7 +5829,7 @@ double GuessVerificationProgress(const ChainTxData& data, CBlockIndex *pindex) {
     return pindex->nChainTx / fTxTotal;
 }
 
-/** RVN START */
+/** AIDP START */
 
 // Only used by test framework
 void SetEnforcedValues(bool value) {
@@ -5849,7 +5937,7 @@ CAssetsCache* GetCurrentAssetCache()
 {
     return passets;
 }
-/** RVN END */
+/** AIDP END */
 
 class CMainCleanup
 {

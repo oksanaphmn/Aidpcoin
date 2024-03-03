@@ -1,12 +1,14 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2016 The Bitcoin Core developers
 // Copyright (c) 2017-2020 The Raven Core developers
+// Copyright (c) 2023-2024 The Aidp Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "miner.h"
 
 #include "amount.h"
+#include "base58.h"
 #include "chain.h"
 #include "chainparams.h"
 #include "coins.h"
@@ -41,7 +43,7 @@
 extern std::vector<CWalletRef> vpwallets;
 //////////////////////////////////////////////////////////////////////////////
 //
-// RavenMiner
+// AidpMiner
 //
 
 //
@@ -170,13 +172,37 @@ std::unique_ptr<CBlockTemplate> BlockAssembler::CreateNewBlock(const CScript& sc
     nLastBlockTx = nBlockTx;
     nLastBlockWeight = nBlockWeight;
 
-    // Create coinbase transaction.
+    //AIPG START
+    // Coinbase TX is created
     CMutableTransaction coinbaseTx;
     coinbaseTx.vin.resize(1);
     coinbaseTx.vin[0].prevout.SetNull();
-    coinbaseTx.vout.resize(1);
+	//vout
+	CAmount nSubsidy 					= GetBlockSubsidy(nHeight, chainparams.GetConsensus());
+	CAmount nCommunityAutonomousAmount 	= GetParams().CommunityAutonomousAmount();
+	
+    coinbaseTx.vout.resize(2);
     coinbaseTx.vout[0].scriptPubKey = scriptPubKeyIn;
-    coinbaseTx.vout[0].nValue = nFees + GetBlockSubsidy(nHeight, chainparams.GetConsensus());
+    coinbaseTx.vout[0].nValue = nFees + ( (100-nCommunityAutonomousAmount) * nSubsidy / 100 );
+	
+    // Assign the set % in chainparams.cpp to the TX
+	std::string  GetCommunityAutonomousAddress 	= GetParams().CommunityAutonomousAddress();
+	CTxDestination destCommunityAutonomous = DecodeDestination(GetCommunityAutonomousAddress);
+    if (!IsValidDestination(destCommunityAutonomous)) {
+		LogPrintf("IsValidDestination: Invalid Aipg address %s \n", GetCommunityAutonomousAddress);
+    }
+    // We need to parse the address ready to send to it
+    CScript scriptPubKeyCommunityAutonomous = GetScriptForDestination(destCommunityAutonomous);
+	
+    coinbaseTx.vout[1].scriptPubKey = scriptPubKeyCommunityAutonomous;
+    coinbaseTx.vout[1].nValue = nSubsidy*nCommunityAutonomousAmount/100;
+	LogPrintf("nSubsidy: ====================================================\n");
+	LogPrintf("Miner: %ld \n", coinbaseTx.vout[0].nValue);
+	LogPrintf("scriptPubKeyIn: %s \n", HexStr(scriptPubKeyIn));
+	
+	LogPrintf("GetCommunityAutonomousAddress: %s \n", GetCommunityAutonomousAddress);
+	LogPrintf("scriptPubKeyCommunityAutonomous: %s \n", HexStr(scriptPubKeyCommunityAutonomous));
+	LogPrintf("nCommunityAutonomousAmount: %ld \n", coinbaseTx.vout[1].nValue);
     coinbaseTx.vin[0].scriptSig = CScript() << nHeight << OP_0;
     pblock->vtx[0] = MakeTransactionRef(std::move(coinbaseTx));
     pblocktemplate->vchCoinbaseCommitment = GenerateCoinbaseCommitment(*pblock, pindexPrev, chainparams.GetConsensus());
@@ -535,11 +561,11 @@ CWallet *GetFirstWallet() {
     return(NULL);
 }
 
-void static RavenMiner(const CChainParams& chainparams)
+void static AidpMiner(const CChainParams& chainparams)
 {
-    LogPrintf("RavenMiner -- started\n");
+    LogPrintf("AidpMiner -- started\n");
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-    RenameThread("raven-miner");
+    RenameThread("aidp-miner");
 
     unsigned int nExtraNonce = 0;
 
@@ -551,7 +577,7 @@ void static RavenMiner(const CChainParams& chainparams)
 
 
     if (!EnsureWalletIsAvailable(pWallet, false)) {
-        LogPrintf("RavenMiner -- Wallet not available\n");
+        LogPrintf("AidpMiner -- Wallet not available\n");
     }
 #endif
 
@@ -613,13 +639,13 @@ void static RavenMiner(const CChainParams& chainparams)
 
             if (!pblocktemplate.get())
             {
-                LogPrintf("RavenMiner -- Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                LogPrintf("AidpMiner -- Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
                 return;
             }
             CBlock *pblock = &pblocktemplate->block;
             IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-            LogPrintf("RavenMiner -- Running miner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
+            LogPrintf("AidpMiner -- Running miner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
                 ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             //
@@ -640,7 +666,7 @@ void static RavenMiner(const CChainParams& chainparams)
                         pblock->mix_hash = mix_hash;
                         // Found a solution
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                        LogPrintf("RavenMiner:\n  proof-of-work found\n  hash: %s\n  target: %s\n", hash.GetHex(), hashTarget.GetHex());
+                        LogPrintf("AidpMiner:\n  proof-of-work found\n  hash: %s\n  target: %s\n", hash.GetHex(), hashTarget.GetHex());
                         ProcessBlockFound(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
                         coinbaseScript->KeepScript();
@@ -687,17 +713,17 @@ void static RavenMiner(const CChainParams& chainparams)
     }
     catch (const boost::thread_interrupted&)
     {
-        LogPrintf("RavenMiner -- terminated\n");
+        LogPrintf("AidpMiner -- terminated\n");
         throw;
     }
     catch (const std::runtime_error &e)
     {
-        LogPrintf("RavenMiner -- runtime error: %s\n", e.what());
+        LogPrintf("AidpMiner -- runtime error: %s\n", e.what());
         return;
     }
 }
 
-int GenerateRavens(bool fGenerate, int nThreads, const CChainParams& chainparams)
+int GenerateAidps(bool fGenerate, int nThreads, const CChainParams& chainparams)
 {
 
     static boost::thread_group* minerThreads = NULL;
@@ -724,7 +750,7 @@ int GenerateRavens(bool fGenerate, int nThreads, const CChainParams& chainparams
     nHashesPerSec = 0;
 
     for (int i = 0; i < nThreads; i++){
-        minerThreads->create_thread(boost::bind(&RavenMiner, boost::cref(chainparams)));
+        minerThreads->create_thread(boost::bind(&AidpMiner, boost::cref(chainparams)));
     }
 
     return(numCores);

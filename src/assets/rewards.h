@@ -1,9 +1,10 @@
 // Copyright (c) 2017-2019 The Raven Core developers
+// Copyright (c) 2023-2024 The Aidp Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#ifndef RAVENCOIN_REWARDS_H
-#define RAVENCOIN_REWARDS_H
+#ifndef AIDPCOIN_REWARDS_H
+#define AIDPCOIN_REWARDS_H
 
 #include "amount.h"
 #include "tinyformat.h"
@@ -167,4 +168,4 @@ void CheckRewardDistributions(CWallet * p_wallet);
 
 
 
-#endif //RAVENCOIN_REWARDS_H
+#endif //AIDPCOIN_REWARDS_H
