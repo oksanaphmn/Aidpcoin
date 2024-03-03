@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+#  aidpd The aidp core server.
+#
+#
+# chkconfig: 345 80 20
+# description: aidpd
+# processname: aidpd
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+# you can override defaults in /etc/sysconfig/aidpd, see below
+if [ -f /etc/sysconfig/aidpd ]; then
+        . /etc/sysconfig/aidpd
+fi
+
+RETVAL=0
+
+prog=aidpd
+# you can override the lockfile via AIDPD_LOCKFILE in /etc/sysconfig/aidpd
+lockfile=${AIDPD_LOCKFILE-/var/lock/subsys/aidpd}
+
+# aidpd defaults to /usr/bin/aidpd, override with AIDPD_BIN
+aidpd=${AIDPD_BIN-/usr/bin/aidpd}
+
+# aidpd opts default to -disablewallet, override with AIDPD_OPTS
+aidpd_opts=${AIDPD_OPTS--disablewallet}
+
+start() {
+    echo -n $"Starting $prog: "
+    daemon $DAEMONOPTS $aidpd $aidpd_opts
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && touch $lockfile
+    return $RETVAL
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc $prog
+    RETVAL=$?
+    echo
+    [ $RETVAL -eq 0 ] && rm -f $lockfile
+    return $RETVAL
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        status $prog
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: service $prog {start|stop|status|restart}"
+        exit 1
+        ;;
+esac

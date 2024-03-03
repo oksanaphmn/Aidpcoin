@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/aidp/.aidp" ]; then
+	AIDPD_DEFAULT_DATADIR="/var/lib/aidp/.aidp"
+else
+	AIDPD_DEFAULT_DATADIR="/var/lib/aidpd"
+fi
+
+AIDPD_CONFIGFILE=${AIDPD_CONFIGFILE:-/etc/aidp/aidp.conf}
+AIDPD_PIDDIR=${AIDPD_PIDDIR:-/var/run/aidpd}
+AIDPD_PIDFILE=${AIDPD_PIDFILE:-${AIDPD_PIDDIR}/aidpd.pid}
+AIDPD_DATADIR=${AIDPD_DATADIR:-${AIDPD_DEFAULT_DATADIR}}
+AIDPD_USER=${AIDPD_USER:-${AIDP_USER:-aidp}}
+AIDPD_GROUP=${AIDPD_GROUP:-aidp}
+AIDPD_BIN=${AIDPD_BIN:-/usr/bin/aidpd}
+AIDPD_NICE=${AIDPD_NICE:-${NICELEVEL:-0}}
+AIDPD_OPTS="${AIDPD_OPTS:-${AIDP_OPTS}}"
+
+name="Aidp Core Daemon"
+description="Aidp cryptocurrency P2P network daemon"
+
+command="/usr/bin/aidpd"
+command_args="-pid=\"${AIDPD_PIDFILE}\" \
+		-conf=\"${AIDPD_CONFIGFILE}\" \
+		-datadir=\"${AIDPD_DATADIR}\" \
+		-daemon \
+		${AIDPD_OPTS}"
+
+required_files="${AIDPD_CONFIGFILE}"
+start_stop_daemon_args="-u ${AIDPD_USER} \
+			-N ${AIDPD_NICE} -w 2000"
+pidfile="${AIDPD_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${AIDPD_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${AIDPD_USER}:${AIDPD_GROUP}" \
+	"${AIDPD_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${AIDPD_USER}:${AIDPD_GROUP}" \
+	"${AIDPD_PIDDIR}"
+
+	checkpath -f \
+	-o ${AIDPD_USER}:${AIDPD_GROUP} \
+	-m 0660 \
+	${AIDPD_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${AIDPD_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run aidpd."
+		eerror "The setting must appear in ${AIDPD_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following "
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Aidp Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

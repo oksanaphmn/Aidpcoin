@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Aidp Core
+Comment=Connect to the Aidp P2P Network
+Comment[de]=Verbinde mit dem Aidp peer-to-peer Netzwerk
+Comment[fr]=Aidp, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Aidp, eşten eşe kriptografik sanal para birimi
+Exec=aidp-qt %u
+Terminal=false
+Type=Application
+Icon=aidp128
+MimeType=x-scheme-handler/aidp;
+Categories=Office;Finance;

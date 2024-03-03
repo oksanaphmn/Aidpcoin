@@ -122,37 +122,95 @@ public:
         consensus.nRuleChangeActivationThreshold = 1613; // Approx 80% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1708992000; // Tuesday 27 February 2024 00:00:00
-        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1709251200; // Friday 1 March 2024 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1709251200; // 2024-03-01 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1710460800; // 2024-03-15 00:00:00
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nOverrideRuleChangeActivationThreshold = 1814;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nOverrideMinerConfirmationWindow = 2016;
         consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].bit = 6;  //Assets (RIP2)
-        consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nStartTime = 1708992000; // Tuesday 27 February 2024 00:00:00
-        consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nTimeout = 1709251200; // Friday 1 March 2024 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nStartTime = 1709251200; // 2024-03-01 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nTimeout = 1710460800; // 2024-03-15 00:00:00
         consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nOverrideRuleChangeActivationThreshold = 1814;
         consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nOverrideMinerConfirmationWindow = 2016;
         consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].bit = 7;  // Assets (RIP5)
-        consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nStartTime = 1708992000; // Tuesday 27 February 2024 00:00:00
-        consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nTimeout = 1709251200; // Friday 1 March 2024 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nStartTime = 1709251200; // 2024-03-01 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nTimeout = 1710460800; // 2024-03-15 00:00:00
         consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nOverrideRuleChangeActivationThreshold = 1714; // Approx 85% of 2016
         consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nOverrideMinerConfirmationWindow = 2016;
         consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].bit = 8;
-        consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nStartTime = 1708992000; // Tuesday 27 February 2024 00:00:00
-        consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nTimeout = 1709251200; // Friday 1 March 2024 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nStartTime = 1709251200; // 2024-03-01 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nTimeout = 1710460800; // 2024-03-15 00:00:00
         consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nOverrideRuleChangeActivationThreshold = 1714; // Approx 85% of 2016
         consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nOverrideMinerConfirmationWindow = 2016;
         consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].bit = 9;
-        consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nStartTime = 1708992000; // Tuesday 27 February 2024 00:00:00
-        consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nTimeout = 1709251200; // Friday 1 March 2024 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nStartTime = 1709251200; // 2024-03-01 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nTimeout = 1710460800; // 2024-03-15 00:00:00
         consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nOverrideRuleChangeActivationThreshold = 1411; // Approx 70% of 2016
         consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nOverrideMinerConfirmationWindow = 2016;
         consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].bit = 10;
-        consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nStartTime = 1708992000; // Tuesday 27 February 2024 00:00:00
-        consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nTimeout = 1709251200; // Friday 1 March 2024 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nStartTime = 1709251200; // 2024-03-01 00:00:00
+        consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nTimeout = 1710460800; // 2024-03-15 00:00:00
         consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideRuleChangeActivationThreshold = 1411; // Approx 70% of 2016
         consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideMinerConfirmationWindow = 2016;
 
-       uint32_t nGenesisTime = 1709066098; // Tuesday 27 February 2024 20:34:58
+       uint32_t nGenesisTime = 1709502832; // 03/03/2024 21:53:52
+
+       /*
+        arith_uint256 test;
+        bool fNegative;
+        bool fOverflow;
+        test.SetCompact(0x1e00ffff, &fNegative, &fOverflow);
+        std::cout << "Test threshold: " << test.GetHex() << "\n\n";
+
+        int genesisNonce = 0;
+        uint256 TempHashHolding = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000");
+        uint256 BestBlockHash = uint256S("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        for (int i=0;i<40000000;i++) {
+            genesis = CreateGenesisBlock(nGenesisTime, i, 0x1e00ffff, 4, 600 * COIN);
+            //genesis.hashPrevBlock = TempHashHolding;
+            // Depending on when the timestamp is on the genesis block. You will need to use GetX16RHash or GetX16RV2Hash. Replace GetHash() with these below
+            consensus.hashGenesisBlock = genesis.GetX16RHash();
+
+            arith_uint256 BestBlockHashArith = UintToArith256(BestBlockHash);
+            if (UintToArith256(consensus.hashGenesisBlock) < BestBlockHashArith) {
+                BestBlockHash = consensus.hashGenesisBlock;
+                std::cout << BestBlockHash.GetHex() << " Nonce: " << i << "\n";
+                std::cout << "   PrevBlockHash: " << genesis.hashPrevBlock.GetHex() << "\n";
+            }
+
+            TempHashHolding = consensus.hashGenesisBlock;
+
+            if (BestBlockHashArith < test) {
+                genesisNonce = i - 1;
+                break;
+            }
+        //    std::cout << consensus.hashGenesisBlock.GetHex() << "\n";
+        }
+        std::cout << "\n";
+        std::cout << "\n";
+        std::cout << "\n";
+
+        std::cout << "hashGenesisBlock to 0x" << BestBlockHash.GetHex() << std::endl;
+        std::cout << "Genesis Nonce to " << genesisNonce << std::endl;
+        std::cout << "Genesis Merkle " << genesis.hashMerkleRoot.GetHex() << std::endl;
+
+        std::cout << "\n";
+        std::cout << "\n";
+        int totalHits = 0;
+        double totalTime = 0.0;
+
+        for(int x = 0; x < 16; x++) {
+            totalHits += algoHashHits[x];
+            totalTime += algoHashTotal[x];
+            std::cout << "hash algo " << x << " hits " << algoHashHits[x] << " total " << algoHashTotal[x] << " avg " << algoHashTotal[x]/algoHashHits[x] << std::endl;
+        }
+
+        std::cout << "Totals: hash algo " <<  " hits " << totalHits << " total " << totalTime << " avg " << totalTime/totalHits << std::endl;
+
+        genesis.hashPrevBlock = TempHashHolding;
+
+        return;
+        */
+
 
         // The best chain should have at least this much work
         consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000"); // New blockchain
@@ -326,7 +384,7 @@ public:
         nDefaultPort = 17002;
         nPruneAfterHeight = 1000;
 
-        uint32_t nGenesisTime = 1709066098; // Tuesday 27 February 2024 20:34:58
+        uint32_t nGenesisTime = 1709502832; // 03/03/2024 21:53:52
 
        
         genesis = CreateGenesisBlock(nGenesisTime, 1234, 0x1e00ffff, 4, 600 * COIN);
@@ -489,7 +547,7 @@ public:
         nDefaultPort = 17003;
         nPruneAfterHeight = 1000;
 
-       uint32_t nGenesisTime = 1709066098; // Tuesday 27 February 2024 20:34:58
+       uint32_t nGenesisTime = 1709502832; // 03/03/2024 21:53:52
 
 
         genesis = CreateGenesisBlock(nGenesisTime, 1, 0x207fffff, 4, 600 * COIN);

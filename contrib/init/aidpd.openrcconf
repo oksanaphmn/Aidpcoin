@@ -1,0 +1,33 @@
+# /etc/conf.d/aidpd: config file for /etc/init.d/aidpd
+
+# Config file location
+#AIDPD_CONFIGFILE="/etc/aidp/aidp.conf"
+
+# What directory to write pidfile to?  (created and owned by $AIDPD_USER)
+#AIDPD_PIDDIR="/var/run/aidpd"
+
+# What filename to give the pidfile
+#AIDPD_PIDFILE="${AIDPD_PIDDIR}/aidpd.pid"
+
+# Where to write aidpd data (be mindful that the blockchain is large)
+#AIDPD_DATADIR="/var/lib/aidpd"
+
+# User and group to own aidpd process
+#AIDPD_USER="aidp"
+#AIDPD_GROUP="aidp"
+
+# Path to aidpd executable
+#AIDPD_BIN="/usr/bin/aidpd"
+
+# Nice value to run aidpd under
+#AIDPD_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#AIDPD_OPTS=""
+
+# The timeout in seconds OpenRC will wait for aidpd to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+AIDPD_SIGTERM_TIMEOUT=60

@@ -1,0 +1,6 @@
+usr/local/bin/aidp-qt usr/bin
+share/pixmaps/aidp32.xpm usr/share/pixmaps
+share/pixmaps/aidp16.xpm usr/share/pixmaps
+share/pixmaps/aidp128.png usr/share/pixmaps
+debian/aidp-qt.desktop usr/share/applications
+debian/aidp-qt.protocol usr/share/kde4/services/
