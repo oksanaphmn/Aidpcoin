@@ -43,6 +43,7 @@ autoconf
 automake
 libtool
 protobuf-compiler
+libdb++-dev
 `
 
 Ubuntu 21.10 - Impish Indri - Install dependencies:
