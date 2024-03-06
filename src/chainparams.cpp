@@ -44,8 +44,8 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-	const char* pszTimestamp = "The Times 03/Jan/2018 Bitcoin is name of the game for new generation of firms";
-	const CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
+	const char* pszTimestamp = "The Financial Times 04/Mar/2024 Bitcoin Tops 67 000 on ETF-Led ";
+	const CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf22d5f") << OP_CHECKSIG;
 	return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
 
@@ -113,7 +113,7 @@ public:
     	consensus.nBIP66Enabled = true;
     	consensus.nSegwitEnabled = true;
     	consensus.nCSVEnabled = true;
-    	consensus.powLimit = uint256S("fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    	consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
     	consensus.kawpowLimit = uint256S("00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // Estimated starting diff for first 180 kawpow blocks
     	consensus.nPowTargetTimespan = 2016 * 60; // 1.4 days
     	consensus.nPowTargetSpacing = 1 * 60;
@@ -153,8 +153,8 @@ public:
     	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideMinerConfirmationWindow = 2016;
 
    	uint32_t nGenesisTime = 1709502832; // 03/03/2024 21:53:52
-/*
-  	 
+
+   	/*
     	arith_uint256 test;
     	bool fNegative;
     	bool fOverflow;
@@ -209,14 +209,14 @@ public:
     	genesis.hashPrevBlock = TempHashHolding;
 
     	return;
-   	 
-*/
+    	*/
+
 
     	// The best chain should have at least this much work
     	consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000"); // New blockchain
 
     	// By default assume that the signatures in ancestors of this block are valid. Block# 0
-    	consensus.defaultAssumeValid = uint256S("0x000000b052682cba09d041cfdf9e9b9c077e0e899f8788883eb8edd7d76bba2a"); // Genesis block
+    	consensus.defaultAssumeValid = uint256S("0x0000005c0ce06920448c82e49182eccf3dd0e360e317ddbbca1adf69cb5ab171"); // Genesis block
 
 
     	pchMessageStart[0] = 0x41; // A
@@ -226,7 +226,7 @@ public:
     	nDefaultPort = 17001;
     	nPruneAfterHeight = 100000;
 
-    	genesis = CreateGenesisBlock(nGenesisTime, 25467771, 0x1e00ffff, 4, 600 * COIN);
+    	genesis = CreateGenesisBlock(nGenesisTime, 12718853, 0x1e00ffff, 4, 600 * COIN);
 
     	consensus.hashGenesisBlock = genesis.GetX16RHash();
 
@@ -234,11 +234,11 @@ public:
     	printf("Merkle = %s \n", genesis.hashMerkleRoot.ToString().c_str());
     	printf("Nonce = %u \n",  genesis.nNonce);
 
-    	assert(consensus.hashGenesisBlock == uint256S("000000b052682cba09d041cfdf9e9b9c077e0e899f8788883eb8edd7d76bba2a"));
-    	assert(genesis.hashMerkleRoot == uint256S("ffcb6782fa653f57a94d020bddd96f5bcc4bf16cc21c7a8cf25923604a2d6ffe"));
+    	assert(consensus.hashGenesisBlock == uint256S("0000005c0ce06920448c82e49182eccf3dd0e360e317ddbbca1adf69cb5ab171"));
+    	assert(genesis.hashMerkleRoot == uint256S("61fe2a3916485577139a8fd9422aeab891d33f7cd6cf36ba8c67841cb4f8e0cd"));
 
-    	vSeeds.emplace_back("192.168.1.73", false);
-    	vSeeds.emplace_back("192.168.1.13", false);
+    	vSeeds.emplace_back("dns.ai-depin.org", false);
+    	vSeeds.emplace_back("eur-seed1.ai-depin.org", false);
     	vSeeds.emplace_back("eur-seed2.ai-depin.org", false);
 
     	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,23);  // A
@@ -300,7 +300,7 @@ public:
     	strGlobalBurnAddress = "AIBurnXXXXXXXXXXXXXXXXXXXXXXWUo9FV";
 
 	// AIDP Fund
-    	strCommunityAutonomousAddress = "AQc2UK3MvjNzAGrcfAgKF4gKYKDu93WCj7";
+    	strCommunityAutonomousAddress = "Axxxxxxxxxxxxxxxxxxxxxxxxxxxx";
     	// DGW Activation
     	nDGWActivationBlock = 1;
 
@@ -387,13 +387,13 @@ public:
     	uint32_t nGenesisTime = 1709502832; // 03/03/2024 21:53:52
 
   	 
-    	genesis = CreateGenesisBlock(nGenesisTime, 25467771, 0x1e00ffff, 4, 600 * COIN);
+    	genesis = CreateGenesisBlock(nGenesisTime, 12718853, 0x1e00ffff, 4, 600 * COIN);
     	consensus.hashGenesisBlock = genesis.GetX16RHash();
 
 
     	//Test MerkleRoot and GenesisBlock
-    	assert(consensus.hashGenesisBlock == uint256S("000000b052682cba09d041cfdf9e9b9c077e0e899f8788883eb8edd7d76bba2a"));
-    	assert(genesis.hashMerkleRoot == uint256S("ffcb6782fa653f57a94d020bddd96f5bcc4bf16cc21c7a8cf25923604a2d6ffe"));
+    	assert(consensus.hashGenesisBlock == uint256S("0000005c0ce06920448c82e49182eccf3dd0e360e317ddbbca1adf69cb5ab171"));
+    	assert(genesis.hashMerkleRoot == uint256S("61fe2a3916485577139a8fd9422aeab891d33f7cd6cf36ba8c67841cb4f8e0cd"));
 
     	vFixedSeeds.clear();
     	vSeeds.clear();
@@ -460,7 +460,7 @@ public:
     	strAddNullQualifierTagBurnAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
 	// Donation Address
-    	strCommunityAutonomousAddress = "AQc2UK3MvjNzAGrcfAgKF4gKYKDu93WCj7";
+    	strCommunityAutonomousAddress = "Axxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
     	// Global Burn Address
     	strGlobalBurnAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
@@ -553,8 +553,8 @@ public:
     	genesis = CreateGenesisBlock(nGenesisTime, 1, 0x207fffff, 4, 600 * COIN);
     	consensus.hashGenesisBlock = genesis.GetX16RHash();
 
-    	assert(consensus.hashGenesisBlock == uint256S("0x000000b052682cba09d041cfdf9e9b9c077e0e899f8788883eb8edd7d76bba2a "));
-    	assert(genesis.hashMerkleRoot == uint256S("b3bc19424137cda378a28006ce78e9fa42c19c1648c427ab7e41db083f451941"));
+    	assert(consensus.hashGenesisBlock == uint256S("0000005c0ce06920448c82e49182eccf3dd0e360e317ddbbca1adf69cb5ab171 "));
+    	assert(genesis.hashMerkleRoot == uint256S("61fe2a3916485577139a8fd9422aeab891d33f7cd6cf36ba8c67841cb4f8e0cd"));
 
     	vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
     	vSeeds.clear();  	//!< Regtest mode doesn't have any DNS seeds.
@@ -610,7 +610,7 @@ public:
     	strAddNullQualifierTagBurnAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
 	// Donation Address
-    	strCommunityAutonomousAddress = "AQc2UK3MvjNzAGrcfAgKF4gKYKDu93WCj7";
+    	strCommunityAutonomousAddress = "Axxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
     	// Global Burn Address
     	strGlobalBurnAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
