@@ -154,7 +154,7 @@ public:
 
    	uint32_t nGenesisTime = 1709502832; // 03/03/2024 21:53:52
 
-   	/*
+   	
     	arith_uint256 test;
     	bool fNegative;
     	bool fOverflow;
@@ -209,7 +209,7 @@ public:
     	genesis.hashPrevBlock = TempHashHolding;
 
     	return;
-    	*/
+    	
 
 
     	// The best chain should have at least this much work
@@ -241,8 +241,8 @@ public:
     	vSeeds.emplace_back("eur-seed1.ai-depin.org", false);
     	vSeeds.emplace_back("eur-seed2.ai-depin.org", false);
 
-    	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,23);  // A
-    	base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,23);  // A
+    	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);  // X and 0x4c
+    	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);  // X and 0x4c
     	base58Prefixes[SECRET_KEY] = 	std::vector<unsigned char>(1,128);
     	base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x88, 0xB2, 0x1E};
     	base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x88, 0xAD, 0xE4};
