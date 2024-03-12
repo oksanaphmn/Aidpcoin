@@ -154,7 +154,7 @@ public:
 
    	uint32_t nGenesisTime = 1709502832; // 03/03/2024 21:53:52
 
-   	
+   	/*
     	arith_uint256 test;
     	bool fNegative;
     	bool fOverflow;
@@ -209,6 +209,7 @@ public:
     	genesis.hashPrevBlock = TempHashHolding;
 
     	return;
+     	*/
     	
 
 
@@ -286,21 +287,21 @@ public:
 	nCommunityAutonomousAmount = 10;
 
     	// Burn Addresses
-    	strIssueAssetBurnAddress = "AIissueAssetXXXXXXXXXXXXXXXXXhhZGt";
-    	strReissueAssetBurnAddress = "AIReissueAssetXXXXXXXXXXXXXXVEFAWu";
-    	strIssueSubAssetBurnAddress = "AIissueSubAssetXXXXXXXXXXXXXWcwhwL";
-    	strIssueUniqueAssetBurnAddress = "AIissueUniqueAssetXXXXXXXXXXWEAe58";
-    	strIssueMsgChannelAssetBurnAddress = "AIissueMsgChanneLAssetXXXXXXSjHvAY";
+    	strIssueAssetBurnAddress = "XIissueAssetXXXXXXXXXXXXXXXXXhhZGt";
+    	strReissueAssetBurnAddress = "XIReissueAssetXXXXXXXXXXXXXXVEFAWu";
+    	strIssueSubAssetBurnAddress = "XIissueSubAssetXXXXXXXXXXXXXWcwhwL";
+    	strIssueUniqueAssetBurnAddress = "XIissueUniqueAssetXXXXXXXXXXWEAe58";
+    	strIssueMsgChannelAssetBurnAddress = "XIissueMsgChanneLAssetXXXXXXSjHvAY";
     	strIssueQualifierAssetBurnAddress = "AIissueQuaLifierXXXXXXXXXXXXUgEDbC";
-    	strIssueSubQualifierAssetBurnAddress = "AIissueSubQuaLifierXXXXXXXXXVTzvv5";
-    	strIssueRestrictedAssetBurnAddress = "AIissueRestrictedXXXXXXXXXXXXzJZ1q";
-    	strAddNullQualifierTagBurnAddress = "AIaddTagBurnXXXXXXXXXXXXXXXXZQm5ya";
+    	strIssueSubQualifierAssetBurnAddress = "XIissueSubQuaLifierXXXXXXXXXVTzvv5";
+    	strIssueRestrictedAssetBurnAddress = "XIissueRestrictedXXXXXXXXXXXXzJZ1q";
+    	strAddNullQualifierTagBurnAddress = "XIaddTagBurnXXXXXXXXXXXXXXXXZQm5ya";
 
         	//Global Burn Address
-    	strGlobalBurnAddress = "AIBurnXXXXXXXXXXXXXXXXXXXXXXWUo9FV";
+    	strGlobalBurnAddress = "XIBurnXXXXXXXXXXXXXXXXXXXXXXWUo9FV";
 
 	// AIDP Fund
-    	strCommunityAutonomousAddress = "Axxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    	strCommunityAutonomousAddress = "Xxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
     	// DGW Activation
     	nDGWActivationBlock = 1;
 
@@ -402,8 +403,8 @@ public:
     	vSeeds.emplace_back("seed-testnet-raven.ravencoin.com", false);
     	vSeeds.emplace_back("seed-testnet-raven.ravencoin.org", false);
 
-	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,20);  // A
-    	base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,20);  // A
+    	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);  // X and 0x4c
+    	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);  // X and 0x4c
     	base58Prefixes[SECRET_KEY] = 	std::vector<unsigned char>(1,239);
     	base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
     	base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
@@ -449,21 +450,21 @@ public:
 	nCommunityAutonomousAmount = 10;
 
     	// Burn Addresses
-    	strIssueAssetBurnAddress = "n1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
-    	strReissueAssetBurnAddress = "n1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
-    	strIssueSubAssetBurnAddress = "n1issueSubAssetXXXXXXXXXXXXXbNiH6v";
-    	strIssueUniqueAssetBurnAddress = "n1issueUniqueAssetXXXXXXXXXXS4695i";
-    	strIssueMsgChannelAssetBurnAddress = "n1issueMsgChanneLAssetXXXXXXT2PBdD";
-    	strIssueQualifierAssetBurnAddress = "n1issueQuaLifierXXXXXXXXXXXXUysLTj";
-    	strIssueSubQualifierAssetBurnAddress = "n1issueSubQuaLifierXXXXXXXXXYffPLh";
-    	strIssueRestrictedAssetBurnAddress = "n1issueRestrictedXXXXXXXXXXXXZVT9V";
-    	strAddNullQualifierTagBurnAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
+    	strIssueAssetBurnAddress = "X1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
+    	strReissueAssetBurnAddress = "X1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
+    	strIssueSubAssetBurnAddress = "X1issueSubAssetXXXXXXXXXXXXXbNiH6v";
+    	strIssueUniqueAssetBurnAddress = "X1issueUniqueAssetXXXXXXXXXXS4695i";
+    	strIssueMsgChannelAssetBurnAddress = "X1issueMsgChanneLAssetXXXXXXT2PBdD";
+    	strIssueQualifierAssetBurnAddress = "X1issueQuaLifierXXXXXXXXXXXXUysLTj";
+    	strIssueSubQualifierAssetBurnAddress = "X1issueSubQuaLifierXXXXXXXXXYffPLh";
+    	strIssueRestrictedAssetBurnAddress = "X1issueRestrictedXXXXXXXXXXXXZVT9V";
+    	strAddNullQualifierTagBurnAddress = "X1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
 	// Donation Address
-    	strCommunityAutonomousAddress = "Axxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    	strCommunityAutonomousAddress = "Xxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
     	// Global Burn Address
-    	strGlobalBurnAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
+    	strGlobalBurnAddress = "X1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
 
     	// DGW Activation
     	nDGWActivationBlock = 1;
@@ -599,21 +600,21 @@ public:
 	nCommunityAutonomousAmount = 10;
 
     	// Burn Addresses
-    	strIssueAssetBurnAddress = "n1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
-    	strReissueAssetBurnAddress = "n1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
-    	strIssueSubAssetBurnAddress = "n1issueSubAssetXXXXXXXXXXXXXbNiH6v";
-    	strIssueUniqueAssetBurnAddress = "n1issueUniqueAssetXXXXXXXXXXS4695i";
-    	strIssueMsgChannelAssetBurnAddress = "n1issueMsgChanneLAssetXXXXXXT2PBdD";
-    	strIssueQualifierAssetBurnAddress = "n1issueQuaLifierXXXXXXXXXXXXUysLTj";
-    	strIssueSubQualifierAssetBurnAddress = "n1issueSubQuaLifierXXXXXXXXXYffPLh";
-    	strIssueRestrictedAssetBurnAddress = "n1issueRestrictedXXXXXXXXXXXXZVT9V";
-    	strAddNullQualifierTagBurnAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
+    	strIssueAssetBurnAddress = "X1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
+    	strReissueAssetBurnAddress = "X1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
+    	strIssueSubAssetBurnAddress = "X1issueSubAssetXXXXXXXXXXXXXbNiH6v";
+    	strIssueUniqueAssetBurnAddress = "X1issueUniqueAssetXXXXXXXXXXS4695i";
+    	strIssueMsgChannelAssetBurnAddress = "X1issueMsgChanneLAssetXXXXXXT2PBdD";
+    	strIssueQualifierAssetBurnAddress = "X1issueQuaLifierXXXXXXXXXXXXUysLTj";
+    	strIssueSubQualifierAssetBurnAddress = "X1issueSubQuaLifierXXXXXXXXXYffPLh";
+    	strIssueRestrictedAssetBurnAddress = "X1issueRestrictedXXXXXXXXXXXXZVT9V";
+    	strAddNullQualifierTagBurnAddress = "X1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
 	// Donation Address
-    	strCommunityAutonomousAddress = "Axxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    	strCommunityAutonomousAddress = "Xxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
     	// Global Burn Address
-    	strGlobalBurnAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
+    	strGlobalBurnAddress = "X1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
 
     	// DGW Activation
     	nDGWActivationBlock = 200;
