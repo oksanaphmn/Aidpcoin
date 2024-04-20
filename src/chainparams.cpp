@@ -44,7 +44,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-	const char* pszTimestamp = "The Financial Times 04/Mar/2024 Bitcoin Tops 67 000 on ETF-Led ";
+	const char* pszTimestamp = "The FT 2024-04-18 Andreessen Horowitz raises 7.2bn and sets sights on AI start-ups";
 	const CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf22d5f") << OP_CHECKSIG;
 	return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
@@ -154,70 +154,13 @@ public:
 
    		uint32_t nGenesisTime = 1713481200; // 2024-04-18 23:00:00
 
-   	/*
-    	arith_uint256 test;
-    	bool fNegative;
-    	bool fOverflow;
-    	test.SetCompact(0x1e00ffff, &fNegative, &fOverflow);
-    	std::cout << "Test threshold: " << test.GetHex() << "\n\n";
-
-    	int genesisNonce = 0;
-    	uint256 TempHashHolding = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000");
-    	uint256 BestBlockHash = uint256S("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-    	for (int i=0;i<40000000;i++) {
-        	genesis = CreateGenesisBlock(nGenesisTime, i, 0x1e00ffff, 4, 600 * COIN);
-        	//genesis.hashPrevBlock = TempHashHolding;
-        	// Depending on when the timestamp is on the genesis block. You will need to use GetX16RHash or GetX16RV2Hash. Replace GetHash() with these below
-        	consensus.hashGenesisBlock = genesis.GetX16RHash();
-
-        	arith_uint256 BestBlockHashArith = UintToArith256(BestBlockHash);
-        	if (UintToArith256(consensus.hashGenesisBlock) < BestBlockHashArith) {
-            	BestBlockHash = consensus.hashGenesisBlock;
-            	std::cout << BestBlockHash.GetHex() << " Nonce: " << i << "\n";
-            	std::cout << "   PrevBlockHash: " << genesis.hashPrevBlock.GetHex() << "\n";
-        	}
-
-        	TempHashHolding = consensus.hashGenesisBlock;
-
-        	if (BestBlockHashArith < test) {
-            	genesisNonce = i - 1;
-            	break;
-        	}
-    	//	std::cout << consensus.hashGenesisBlock.GetHex() << "\n";
-    	}
-    	std::cout << "\n";
-    	std::cout << "\n";
-    	std::cout << "\n";
-
-    	std::cout << "hashGenesisBlock to 0x" << BestBlockHash.GetHex() << std::endl;
-    	std::cout << "Genesis Nonce to " << genesisNonce << std::endl;
-    	std::cout << "Genesis Merkle " << genesis.hashMerkleRoot.GetHex() << std::endl;
-
-    	std::cout << "\n";
-    	std::cout << "\n";
-    	int totalHits = 0;
-    	double totalTime = 0.0;
-
-    	for(int x = 0; x < 16; x++) {
-        	totalHits += algoHashHits[x];
-        	totalTime += algoHashTotal[x];
-        	std::cout << "hash algo " << x << " hits " << algoHashHits[x] << " total " << algoHashTotal[x] << " avg " << algoHashTotal[x]/algoHashHits[x] << std::endl;
-    	}
-
-    	std::cout << "Totals: hash algo " <<  " hits " << totalHits << " total " << totalTime << " avg " << totalTime/totalHits << std::endl;
-
-    	genesis.hashPrevBlock = TempHashHolding;
-
-    	return;
-     	*/
-    	
 
 
     	// The best chain should have at least this much work
     	consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000"); // New blockchain
 
     	// By default assume that the signatures in ancestors of this block are valid. Block# 0
-    	consensus.defaultAssumeValid = uint256S("0x0000005c0ce06920448c82e49182eccf3dd0e360e317ddbbca1adf69cb5ab171"); // Genesis block
+    	consensus.defaultAssumeValid = uint256S("0x000000608970d8abc72d549cb0071ed7702a08d2149f71ddbe87ae2a16e5bc7c"); // Genesis block
 
 
     	pchMessageStart[0] = 0x41; // A
@@ -227,7 +170,7 @@ public:
     	nDefaultPort = 17001;
     	nPruneAfterHeight = 100000;
 
-    	genesis = CreateGenesisBlock(nGenesisTime, 12718853, 0x1e00ffff, 4, 600 * COIN);
+    	genesis = CreateGenesisBlock(nGenesisTime, 21677642, 0x1e00ffff, 4, 600 * COIN);
 
     	consensus.hashGenesisBlock = genesis.GetX16RHash();
 
@@ -235,8 +178,8 @@ public:
     	printf("Merkle = %s \n", genesis.hashMerkleRoot.ToString().c_str());
     	printf("Nonce = %u \n",  genesis.nNonce);
 
-    	assert(consensus.hashGenesisBlock == uint256S("0000005c0ce06920448c82e49182eccf3dd0e360e317ddbbca1adf69cb5ab171"));
-    	assert(genesis.hashMerkleRoot == uint256S("61fe2a3916485577139a8fd9422aeab891d33f7cd6cf36ba8c67841cb4f8e0cd"));
+    	assert(consensus.hashGenesisBlock == uint256S("000000608970d8abc72d549cb0071ed7702a08d2149f71ddbe87ae2a16e5bc7c"));
+    	assert(genesis.hashMerkleRoot == uint256S("e5730bfde1b85e96d78d415c5135cf3c789c37d895d8cbacf7e6e9d64c3f00af"));
 
     	vSeeds.emplace_back("dns.ai-depin.org", false);
     	vSeeds.emplace_back("eur-seed1.ai-depin.org", false);
@@ -301,7 +244,7 @@ public:
     	strGlobalBurnAddress = "XIBurnXXXXXXXXXXXXXXXXXXXXXXWUo9FV";
 
 		// AIDP Fund
-    	strCommunityAutonomousAddress = "Xxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    	strCommunityAutonomousAddress = "XiVX62PZFGRqK9yo8qYFYBFNFCmLwkN7oi";
     	// DGW Activation
     	nDGWActivationBlock = 1;
 
@@ -388,13 +331,13 @@ public:
     	uint32_t nGenesisTime = 1713481200; // 2024-04-18 23:00:00
 
   	 
-    	genesis = CreateGenesisBlock(nGenesisTime, 12718853, 0x1e00ffff, 4, 600 * COIN);
+    	genesis = CreateGenesisBlock(nGenesisTime, 21677642, 0x1e00ffff, 4, 600 * COIN);
     	consensus.hashGenesisBlock = genesis.GetX16RHash();
 
 
     	//Test MerkleRoot and GenesisBlock
-    	assert(consensus.hashGenesisBlock == uint256S("0000005c0ce06920448c82e49182eccf3dd0e360e317ddbbca1adf69cb5ab171"));
-    	assert(genesis.hashMerkleRoot == uint256S("61fe2a3916485577139a8fd9422aeab891d33f7cd6cf36ba8c67841cb4f8e0cd"));
+    	assert(consensus.hashGenesisBlock == uint256S("0x000000608970d8abc72d549cb0071ed7702a08d2149f71ddbe87ae2a16e5bc7c"));
+    	assert(genesis.hashMerkleRoot == uint256S("e5730bfde1b85e96d78d415c5135cf3c789c37d895d8cbacf7e6e9d64c3f00af"));
 
     	vFixedSeeds.clear();
     	vSeeds.clear();
@@ -461,7 +404,7 @@ public:
     	strAddNullQualifierTagBurnAddress = "X1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
 	// Donation Address
-    	strCommunityAutonomousAddress = "Xxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    	strCommunityAutonomousAddress = "XiVX62PZFGRqK9yo8qYFYBFNFCmLwkN7oi";
 
     	// Global Burn Address
     	strGlobalBurnAddress = "X1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
@@ -611,7 +554,7 @@ public:
     	strAddNullQualifierTagBurnAddress = "X1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
 	// Donation Address
-    	strCommunityAutonomousAddress = "Xxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    	strCommunityAutonomousAddress = "XqC44qxWUKbhd7DMqEGESVLRDPzLMZJWXA";
 
     	// Global Burn Address
     	strGlobalBurnAddress = "X1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
