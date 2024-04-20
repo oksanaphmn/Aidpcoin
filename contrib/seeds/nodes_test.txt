@@ -1,6 +1,5 @@
-# List of fixed seed nodes for testnet
-
-# Onion nodes
-thfsmmn2jaidp.onion
+162.19.68.245:17002
+149.28.228.18:17002
+45.32.105.87:17002
 
 
