@@ -44,7 +44,7 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
 
 static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
-	const char* pszTimestamp = "The FT 2024-04-18 Andreessen Horowitz raises 7.2bn and sets sights on AI start-ups";
+	const char* pszTimestamp = "The WSJ 2024-04-22 Sam Altman Invests in Energy Startup Focused on AI Data Centers";
 	const CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf22d5f") << OP_CHECKSIG;
 	return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
 }
@@ -114,10 +114,10 @@ public:
     	consensus.nSegwitEnabled = true;
     	consensus.nCSVEnabled = true;
     	consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-    	consensus.kawpowLimit = uint256S("000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // Estimated starting diff for first 180 kawpow blocks
+    	consensus.kawpowLimit = uint256S("0000000000ffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // Estimated starting diff for first 180 kawpow blocks
     	consensus.nPowTargetTimespan = 2016 * 60; // 1.4 days
     	consensus.nPowTargetSpacing = 1 * 60;
-	consensus.fPowAllowMinDifficultyBlocks = false;
+		consensus.fPowAllowMinDifficultyBlocks = false;
     	consensus.fPowNoRetargeting = false;
     	consensus.nRuleChangeActivationThreshold = 1613; // Approx 80% of 2016
     	consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
@@ -152,15 +152,70 @@ public:
     	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideRuleChangeActivationThreshold = 1411; 
     	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideMinerConfirmationWindow = 2016;
 
-   		uint32_t nGenesisTime = 1713481200; // 2024-04-18 23:00:00
+   		uint32_t nGenesisTime = 1714226400; // 2024-04-27 14:00:00 UTC
+/*
+    	arith_uint256 test;
+    	bool fNegative;
+    	bool fOverflow;
+    	test.SetCompact(0x1e00ffff, &fNegative, &fOverflow);
+    	std::cout << "Test threshold: " << test.GetHex() << "\n\n";
 
+    	int genesisNonce = 0;
+    	uint256 TempHashHolding = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000");
+    	uint256 BestBlockHash = uint256S("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    	for (int i=0;i<40000000;i++) {
+        	genesis = CreateGenesisBlock(nGenesisTime, i, 0x1e00ffff, 4, 600 * COIN);
+        	//genesis.hashPrevBlock = TempHashHolding;
+        	// Depending on when the timestamp is on the genesis block. You will need to use GetX16RHash or GetX16RV2Hash. Replace GetHash() with these below
+        	consensus.hashGenesisBlock = genesis.GetX16RHash();
 
+        	arith_uint256 BestBlockHashArith = UintToArith256(BestBlockHash);
+        	if (UintToArith256(consensus.hashGenesisBlock) < BestBlockHashArith) {
+            	BestBlockHash = consensus.hashGenesisBlock;
+            	std::cout << BestBlockHash.GetHex() << " Nonce: " << i << "\n";
+            	std::cout << "   PrevBlockHash: " << genesis.hashPrevBlock.GetHex() << "\n";
+        	}
+
+        	TempHashHolding = consensus.hashGenesisBlock;
+
+        	if (BestBlockHashArith < test) {
+            	genesisNonce = i - 1;
+            	break;
+        	}
+    	//	std::cout << consensus.hashGenesisBlock.GetHex() << "\n";
+    	}
+    	std::cout << "\n";
+    	std::cout << "\n";
+    	std::cout << "\n";
+
+    	std::cout << "hashGenesisBlock to 0x" << BestBlockHash.GetHex() << std::endl;
+    	std::cout << "Genesis Nonce to " << genesisNonce << std::endl;
+    	std::cout << "Genesis Merkle " << genesis.hashMerkleRoot.GetHex() << std::endl;
+
+    	std::cout << "\n";
+    	std::cout << "\n";
+    	int totalHits = 0;
+    	double totalTime = 0.0;
+
+    	for(int x = 0; x < 16; x++) {
+        	totalHits += algoHashHits[x];
+        	totalTime += algoHashTotal[x];
+        	std::cout << "hash algo " << x << " hits " << algoHashHits[x] << " total " << algoHashTotal[x] << " avg " << algoHashTotal[x]/algoHashHits[x] << std::endl;
+    	}
+
+    	std::cout << "Totals: hash algo " <<  " hits " << totalHits << " total " << totalTime << " avg " << totalTime/totalHits << std::endl;
+
+    	genesis.hashPrevBlock = TempHashHolding;
+
+    	return;
+ 
+*/
 
     	// The best chain should have at least this much work
     	consensus.nMinimumChainWork = uint256S("0x0000000000000000000000000000000000000000000000000000000000000000"); // New blockchain
 
     	// By default assume that the signatures in ancestors of this block are valid. Block# 0
-    	consensus.defaultAssumeValid = uint256S("0x000000608970d8abc72d549cb0071ed7702a08d2149f71ddbe87ae2a16e5bc7c"); // Genesis block
+    	consensus.defaultAssumeValid = uint256S("0x000000181ba07f82878f548c2f3e00f176e1e9deacdccac87b13ae3885ecc3c7"); // Genesis block
 
 
     	pchMessageStart[0] = 0x41; // A
@@ -170,7 +225,7 @@ public:
     	nDefaultPort = 17001;
     	nPruneAfterHeight = 100000;
 
-    	genesis = CreateGenesisBlock(nGenesisTime, 21677642, 0x1e00ffff, 4, 600 * COIN);
+    	genesis = CreateGenesisBlock(nGenesisTime, 21553080, 0x1e00ffff, 4, 600 * COIN);
 
     	consensus.hashGenesisBlock = genesis.GetX16RHash();
 
@@ -178,8 +233,8 @@ public:
     	printf("Merkle = %s \n", genesis.hashMerkleRoot.ToString().c_str());
     	printf("Nonce = %u \n",  genesis.nNonce);
 
-    	assert(consensus.hashGenesisBlock == uint256S("000000608970d8abc72d549cb0071ed7702a08d2149f71ddbe87ae2a16e5bc7c"));
-    	assert(genesis.hashMerkleRoot == uint256S("e5730bfde1b85e96d78d415c5135cf3c789c37d895d8cbacf7e6e9d64c3f00af"));
+    	assert(consensus.hashGenesisBlock == uint256S("000000181ba07f82878f548c2f3e00f176e1e9deacdccac87b13ae3885ecc3c7"));
+    	assert(genesis.hashMerkleRoot == uint256S("5cea53563cff1395d6da77cafeb5ee426ac6be7fe9166a3c0e696c38fa0be698"));
 
     	vSeeds.emplace_back("dns.ai-depin.org", false);
     	vSeeds.emplace_back("eur-seed1.ai-depin.org", false);
@@ -226,25 +281,25 @@ public:
     	nIssueRestrictedAssetBurnAmount = 150 * COIN;
     	nAddNullQualifierTagBurnAmount = 0.01 * COIN;
 
-		// 10% of AIDP Rewards for AIDP investment
-		nCommunityAutonomousAmount = 10;
+	// 10% of AIDP Rewards for AIDP investment
+	nCommunityAutonomousAmount = 10;
 
     	// Burn Addresses
-    	strIssueAssetBurnAddress = "XIissueAssetXXXXXXXXXXXXXXXXXhhZGt";
-    	strReissueAssetBurnAddress = "XIReissueAssetXXXXXXXXXXXXXXVEFAWu";
-    	strIssueSubAssetBurnAddress = "XIissueSubAssetXXXXXXXXXXXXXWcwhwL";
-    	strIssueUniqueAssetBurnAddress = "XIissueUniqueAssetXXXXXXXXXXWEAe58";
-    	strIssueMsgChannelAssetBurnAddress = "XIissueMsgChanneLAssetXXXXXXSjHvAY";
-    	strIssueQualifierAssetBurnAddress = "XIissueQuaLifierXXXXXXXXXXXXUgEDbC";
-    	strIssueSubQualifierAssetBurnAddress = "XIissueSubQuaLifierXXXXXXXXXVTzvv5";
-    	strIssueRestrictedAssetBurnAddress = "XIissueRestrictedXXXXXXXXXXXXzJZ1q";
-    	strAddNullQualifierTagBurnAddress = "XIaddTagBurnXXXXXXXXXXXXXXXXZQm5ya";
+    	strIssueAssetBurnAddress = "AIissueAssetXXXXXXXXXXXXXXXXXhhZGt";
+    	strReissueAssetBurnAddress = "AIReissueAssetXXXXXXXXXXXXXXVEFAWu";
+    	strIssueSubAssetBurnAddress = "AIissueSubAssetXXXXXXXXXXXXXWcwhwL";
+    	strIssueUniqueAssetBurnAddress = "AIissueUniqueAssetXXXXXXXXXXWEAe58";
+    	strIssueMsgChannelAssetBurnAddress = "AIissueMsgChanneLAssetXXXXXXSjHvAY";
+    	strIssueQualifierAssetBurnAddress = "AIissueQuaLifierXXXXXXXXXXXXUgEDbC";
+    	strIssueSubQualifierAssetBurnAddress = "AIissueSubQuaLifierXXXXXXXXXVTzvv5";
+    	strIssueRestrictedAssetBurnAddress = "AIissueRestrictedXXXXXXXXXXXXzJZ1q";
+    	strAddNullQualifierTagBurnAddress = "AIaddTagBurnXXXXXXXXXXXXXXXXZQm5ya";
 
-        //Global Burn Address
-    	strGlobalBurnAddress = "XIBurnXXXXXXXXXXXXXXXXXXXXXXWUo9FV";
+        	//Global Burn Address
+    	strGlobalBurnAddress = "AIBurnXXXXXXXXXXXXXXXXXXXXXXWUo9FV";
 
-		// AIDP Fund
-    	strCommunityAutonomousAddress = "XiVX62PZFGRqK9yo8qYFYBFNFCmLwkN7oi";
+	// AIDP Fund
+    	strCommunityAutonomousAddress = "XuyCzNG3XdibTQvZgVu7ypmeVDBA1kvyev";
     	// DGW Activation
     	nDGWActivationBlock = 1;
 
@@ -269,14 +324,14 @@ class CTestNetParams : public CChainParams {
 public:
 	CTestNetParams() {
     	strNetworkID = "test";
-    	consensus.nSubsidyHalvingInterval = 129600;  // 90 days at 1 min block time
+    	consensus.nSubsidyHalvingInterval = 2100000;  //~ 4 yrs at 1 min block time
     	consensus.nBIP34Enabled = true;
     	consensus.nBIP65Enabled = true;
     	consensus.nBIP66Enabled = true;
     	consensus.nSegwitEnabled = true;
     	consensus.nCSVEnabled = true;
-    	consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-    	consensus.kawpowLimit = uint256S("000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // Estimated starting diff for first 180 kawpow blocks
+    	consensus.powLimit = uint256S("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+    	consensus.kawpowLimit = uint256S("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); // Estimated starting diff for first 180 kawpow blocks
     	consensus.nPowTargetTimespan = 2016 * 60; // 1.4 days
     	consensus.nPowTargetSpacing = 1 * 60;
     	consensus.fPowAllowMinDifficultyBlocks = false;
@@ -284,33 +339,33 @@ public:
     	consensus.nRuleChangeActivationThreshold = 1613; // Approx 80% of 2016
     	consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
     	consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
-    	consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1711929600; // 2024-04-01 00:00:00
-    	consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1893452400;  //  2029-12-31 23:00:00
+    	consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 0;
+    	consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1893452400;
     	consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nOverrideRuleChangeActivationThreshold = 108;
     	consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nOverrideMinerConfirmationWindow = 144;
     	consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].bit = 6;
-    	consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nStartTime = 1711929600;  // 2024-04-01 00:00:00
-    	consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nTimeout = 1893452400;  //  2029-12-31 23:00:00
+    	consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nStartTime = 0;
+    	consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nTimeout = 1893452400;
     	consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nOverrideRuleChangeActivationThreshold = 108;
     	consensus.vDeployments[Consensus::DEPLOYMENT_ASSETS].nOverrideMinerConfirmationWindow = 144;
     	consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].bit = 7;
-    	consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nStartTime = 1711929600;  // 2024-04-01 00:00:00
-    	consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nTimeout = 1893452400; //  2029-12-31 23:00:00
+    	consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nStartTime = 0;
+    	consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nTimeout = 1893452400; // Mon Dec 31 2029 23:00:00 GMT+0000
     	consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nOverrideRuleChangeActivationThreshold = 108;
     	consensus.vDeployments[Consensus::DEPLOYMENT_MSG_REST_ASSETS].nOverrideMinerConfirmationWindow = 144;
     	consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].bit = 8;
-    	consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nStartTime = 1711929600;  // 2024-04-01 00:00:00
-    	consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nTimeout = 1893452400;  //  2029-12-31 23:00:00
+    	consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nStartTime = 0;
+    	consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nTimeout = 1893452400;
     	consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nOverrideRuleChangeActivationThreshold = 208;
     	consensus.vDeployments[Consensus::DEPLOYMENT_TRANSFER_SCRIPT_SIZE].nOverrideMinerConfirmationWindow = 288;
     	consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].bit = 9;
-    	consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nStartTime = 1711929600;  // 2024-04-01 00:00:00
-    	consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nTimeout = 1893452400;  //  2029-12-31 23:00:00
+    	consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nStartTime = 0;
+    	consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nTimeout = 1893452400;
     	consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nOverrideRuleChangeActivationThreshold = 108;
     	consensus.vDeployments[Consensus::DEPLOYMENT_ENFORCE_VALUE].nOverrideMinerConfirmationWindow = 144;
     	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].bit = 10;
-    	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nStartTime = 1711929600;  // 2024-04-01 00:00:00
-    	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nTimeout = 1893452400;  //  2029-12-31 23:00:00
+    	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nStartTime = 0;
+    	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nTimeout = 1893452400;
     	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideRuleChangeActivationThreshold = 400;
     	consensus.vDeployments[Consensus::DEPLOYMENT_COINBASE_ASSETS].nOverrideMinerConfirmationWindow = 500;
 
@@ -328,26 +383,25 @@ public:
     	nDefaultPort = 17002;
     	nPruneAfterHeight = 1000;
 
-    	uint32_t nGenesisTime = 1713481200; // 2024-04-18 23:00:00
-
+		uint32_t nGenesisTime = 1714226400; // 2024-04-27 14:00:00 UTC
   	 
-    	genesis = CreateGenesisBlock(nGenesisTime, 21677642, 0x1e00ffff, 4, 600 * COIN);
+    	genesis = CreateGenesisBlock(nGenesisTime, 21553080, 0x1e00ffff, 4, 600 * COIN);
     	consensus.hashGenesisBlock = genesis.GetX16RHash();
 
 
     	//Test MerkleRoot and GenesisBlock
-    	assert(consensus.hashGenesisBlock == uint256S("0x000000608970d8abc72d549cb0071ed7702a08d2149f71ddbe87ae2a16e5bc7c"));
-    	assert(genesis.hashMerkleRoot == uint256S("e5730bfde1b85e96d78d415c5135cf3c789c37d895d8cbacf7e6e9d64c3f00af"));
+    	assert(consensus.hashGenesisBlock == uint256S("000000181ba07f82878f548c2f3e00f176e1e9deacdccac87b13ae3885ecc3c7"));
+    	assert(genesis.hashMerkleRoot == uint256S("5cea53563cff1395d6da77cafeb5ee426ac6be7fe9166a3c0e696c38fa0be698"));
 
     	vFixedSeeds.clear();
     	vSeeds.clear();
 
-    	vSeeds.emplace_back("dns.ai-depin.org", false);
-    	vSeeds.emplace_back("eur-seed1.ai-depin.org", false);
-    	vSeeds.emplace_back("eur-seed2.ai-depin.org", false);
+    	vSeeds.emplace_back("seed-testnet-raven.bitactivate.com", false);
+    	vSeeds.emplace_back("seed-testnet-raven.ravencoin.com", false);
+    	vSeeds.emplace_back("seed-testnet-raven.ravencoin.org", false);
 
-    	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);  // X and 0x4c
-    	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);  // X and 0x4c
+	base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,20);  // A
+    	base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,20);  // A
     	base58Prefixes[SECRET_KEY] = 	std::vector<unsigned char>(1,239);
     	base58Prefixes[EXT_PUBLIC_KEY] = {0x04, 0x35, 0x87, 0xCF};
     	base58Prefixes[EXT_SECRET_KEY] = {0x04, 0x35, 0x83, 0x94};
@@ -393,21 +447,21 @@ public:
 	nCommunityAutonomousAmount = 10;
 
     	// Burn Addresses
-    	strIssueAssetBurnAddress = "X1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
-    	strReissueAssetBurnAddress = "X1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
-    	strIssueSubAssetBurnAddress = "X1issueSubAssetXXXXXXXXXXXXXbNiH6v";
-    	strIssueUniqueAssetBurnAddress = "X1issueUniqueAssetXXXXXXXXXXS4695i";
-    	strIssueMsgChannelAssetBurnAddress = "X1issueMsgChanneLAssetXXXXXXT2PBdD";
-    	strIssueQualifierAssetBurnAddress = "X1issueQuaLifierXXXXXXXXXXXXUysLTj";
-    	strIssueSubQualifierAssetBurnAddress = "X1issueSubQuaLifierXXXXXXXXXYffPLh";
-    	strIssueRestrictedAssetBurnAddress = "X1issueRestrictedXXXXXXXXXXXXZVT9V";
-    	strAddNullQualifierTagBurnAddress = "X1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
+    	strIssueAssetBurnAddress = "n1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
+    	strReissueAssetBurnAddress = "n1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
+    	strIssueSubAssetBurnAddress = "n1issueSubAssetXXXXXXXXXXXXXbNiH6v";
+    	strIssueUniqueAssetBurnAddress = "n1issueUniqueAssetXXXXXXXXXXS4695i";
+    	strIssueMsgChannelAssetBurnAddress = "n1issueMsgChanneLAssetXXXXXXT2PBdD";
+    	strIssueQualifierAssetBurnAddress = "n1issueQuaLifierXXXXXXXXXXXXUysLTj";
+    	strIssueSubQualifierAssetBurnAddress = "n1issueSubQuaLifierXXXXXXXXXYffPLh";
+    	strIssueRestrictedAssetBurnAddress = "n1issueRestrictedXXXXXXXXXXXXZVT9V";
+    	strAddNullQualifierTagBurnAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
 	// Donation Address
-    	strCommunityAutonomousAddress = "XiVX62PZFGRqK9yo8qYFYBFNFCmLwkN7oi";
+    	strCommunityAutonomousAddress = "XuyCzNG3XdibTQvZgVu7ypmeVDBA1kvyev";
 
     	// Global Burn Address
-    	strGlobalBurnAddress = "X1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
+    	strGlobalBurnAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
 
     	// DGW Activation
     	nDGWActivationBlock = 1;
@@ -491,14 +545,14 @@ public:
     	nDefaultPort = 17003;
     	nPruneAfterHeight = 1000;
 
-   	    uint32_t nGenesisTime = 1713481200; // 2024-04-18 23:00:00
+   		uint32_t nGenesisTime = 1714226400; // 2024-04-27 14:00:00 UTC
 
 
     	genesis = CreateGenesisBlock(nGenesisTime, 1, 0x207fffff, 4, 600 * COIN);
     	consensus.hashGenesisBlock = genesis.GetX16RHash();
 
-    	assert(consensus.hashGenesisBlock == uint256S("0000005c0ce06920448c82e49182eccf3dd0e360e317ddbbca1adf69cb5ab171 "));
-    	assert(genesis.hashMerkleRoot == uint256S("61fe2a3916485577139a8fd9422aeab891d33f7cd6cf36ba8c67841cb4f8e0cd"));
+    	assert(consensus.hashGenesisBlock == uint256S("00000035b0150cb21b97bbc9b3cce325d623e2debf333925f383e58a57fd6961"));
+    	assert(genesis.hashMerkleRoot == uint256S("e5730bfde1b85e96d78d415c5135cf3c789c37d895d8cbacf7e6e9d64c3f00af"));
 
     	vFixedSeeds.clear(); //!< Regtest mode doesn't have any fixed seeds.
     	vSeeds.clear();  	//!< Regtest mode doesn't have any DNS seeds.
@@ -543,21 +597,21 @@ public:
 	nCommunityAutonomousAmount = 10;
 
     	// Burn Addresses
-    	strIssueAssetBurnAddress = "X1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
-    	strReissueAssetBurnAddress = "X1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
-    	strIssueSubAssetBurnAddress = "X1issueSubAssetXXXXXXXXXXXXXbNiH6v";
-    	strIssueUniqueAssetBurnAddress = "X1issueUniqueAssetXXXXXXXXXXS4695i";
-    	strIssueMsgChannelAssetBurnAddress = "X1issueMsgChanneLAssetXXXXXXT2PBdD";
-    	strIssueQualifierAssetBurnAddress = "X1issueQuaLifierXXXXXXXXXXXXUysLTj";
-    	strIssueSubQualifierAssetBurnAddress = "X1issueSubQuaLifierXXXXXXXXXYffPLh";
-    	strIssueRestrictedAssetBurnAddress = "X1issueRestrictedXXXXXXXXXXXXZVT9V";
-    	strAddNullQualifierTagBurnAddress = "X1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
+    	strIssueAssetBurnAddress = "n1issueAssetXXXXXXXXXXXXXXXXWdnemQ";
+    	strReissueAssetBurnAddress = "n1ReissueAssetXXXXXXXXXXXXXXWG9NLd";
+    	strIssueSubAssetBurnAddress = "n1issueSubAssetXXXXXXXXXXXXXbNiH6v";
+    	strIssueUniqueAssetBurnAddress = "n1issueUniqueAssetXXXXXXXXXXS4695i";
+    	strIssueMsgChannelAssetBurnAddress = "n1issueMsgChanneLAssetXXXXXXT2PBdD";
+    	strIssueQualifierAssetBurnAddress = "n1issueQuaLifierXXXXXXXXXXXXUysLTj";
+    	strIssueSubQualifierAssetBurnAddress = "n1issueSubQuaLifierXXXXXXXXXYffPLh";
+    	strIssueRestrictedAssetBurnAddress = "n1issueRestrictedXXXXXXXXXXXXZVT9V";
+    	strAddNullQualifierTagBurnAddress = "n1addTagBurnXXXXXXXXXXXXXXXXX5oLMH";
 
 	// Donation Address
-    	strCommunityAutonomousAddress = "XqC44qxWUKbhd7DMqEGESVLRDPzLMZJWXA";
+    	strCommunityAutonomousAddress = "Axxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
     	// Global Burn Address
-    	strGlobalBurnAddress = "X1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
+    	strGlobalBurnAddress = "n1BurnXXXXXXXXXXXXXXXXXXXXXXU1qejP";
 
     	// DGW Activation
     	nDGWActivationBlock = 200;
