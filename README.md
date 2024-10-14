@@ -1,7 +1,7 @@
 AIDP Core integration/staging tree
 =====================================
 
-[https://www.](https://www.ai-depin.org/)
+(https://www.ai-depin.org/)
 
 To see how to run Aidpcoin, please read the respective files in [the doc folder](doc)
 
